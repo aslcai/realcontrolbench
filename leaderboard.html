@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore RealControlBench steering methods by base model and task, with task-specific metrics and reproducible evaluation settings.">
+  <meta name="theme-color" content="#ffffff">
+  <title>RealControlBench</title>
+  <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="catalog.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body data-page="leaderboard">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="site-header"></header>
+  <main id="main" class="container leaderboard-main">
+    <section class="project-intro" id="about" aria-labelledby="project-title">
+      <h1 id="project-title">RealControlBench: Fine-Grained Control of LLMs and Agents</h1>
+      <p>RealControlBench evaluates activation steering in language models and agents. This site presents instruction-following, tool-use, and reasoning evaluations, measuring both behavioral control and task performance.</p>
+      <div class="project-links">
+        <a href="https://huggingface.co/datasets/Mingyu111/controlbench" target="_blank" rel="noopener noreferrer">Dataset on Hugging Face</a>
+        <a href="https://github.com/MingyuJ666/ControlBench" target="_blank" rel="noopener noreferrer">Code on GitHub</a>
+      </div>
+    </section>
+    <div class="board-heading" id="leaderboard"><h2>Leaderboard</h2><button class="button primary" data-dialog="submit">Submit a method</button></div>
+    <p class="results-notice">Evaluation results are not yet published.</p>
+    <section class="board-filters" aria-label="Evaluation settings">
+      <label class="filter-field"><span>Base model</span><select id="model-filter"></select></label>
+      <label class="filter-field task-filter"><span>Task</span><select id="task-filter"></select></label>
+      <label class="filter-field" id="track-field" hidden><span>Tool-use track</span><select id="track-filter"><option value="single">Single-turn &amp; follow-up</option><option value="multi">Multi-turn execution</option></select></label>
+      <div class="filter-field release-field"><span>RESULTS RELEASE</span><p><span class="status-dot muted"></span> Not published</p></div>
+    </section>
+    <section class="board-panel" aria-label="Methods and results">
+      <div class="board-toolbar"><div class="segmented" role="group" aria-label="Method category"><button data-kind="all" aria-pressed="true">All methods</button><button data-kind="steering" aria-pressed="false">Steering</button><button data-kind="baseline" aria-pressed="false">Baselines</button></div><label class="search-field"><span aria-hidden="true">⌕</span><span class="sr-only">Search methods</span><input id="method-search" type="search" placeholder="Search methods…" autocomplete="off"></label></div>
+      <div class="table-meta"><span id="result-count" aria-live="polite"></span><div><label class="sort-label">Order <select id="sort-filter"><option value="reference">References first</option><option value="az">Method A–Z</option><option value="za">Method Z–A</option></select></label><button class="icon-button" id="share-view">Copy link <span aria-hidden="true">↗</span></button><button class="icon-button" id="export-csv">Download CSV <span aria-hidden="true">↓</span></button></div></div>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Methods and metrics table"><table class="results-table" id="leaderboard-table"><caption class="sr-only">Unranked method catalogue. All results are unpublished. Select up to three methods for a comparison preview.</caption><thead id="results-head"></thead><tbody id="results-body"></tbody></table></div>
+      <div class="empty-state" id="empty-state" hidden><span aria-hidden="true">⌕</span><h3>No matching methods</h3><p>Try another method name or reset the catalogue filters.</p><button class="button secondary" id="clear-filters">Reset filters</button></div>
+      <div class="table-bottom"><p><span class="legend-dot dark"></span> Reference baseline <span class="divider">/</span> — Result not published</p><span>Catalogue order · no ranks assigned</span></div>
+    </section>
+    <div class="comparison-bar" id="comparison-bar" hidden><p><strong id="selected-count">0</strong> methods selected <span>· up to 3</span></p><div><button class="text-button" id="clear-selection">Clear</button><button class="button primary small" id="compare-methods">Compare methods <span aria-hidden="true">→</span></button></div></div>
+    <div class="board-notes"><details><summary>Metrics and evaluation details <span aria-hidden="true">+</span></summary><div id="metric-notes"></div><p>Compare methods within the same base model, task, and evaluation protocol. A missing result is not a zero.</p></details></div>
+  </main>
+  <footer id="site-footer" class="site-footer container"></footer>
+  <div id="dialog-root"></div><div class="toast" id="toast" role="status"></div>
+  <noscript><p class="container">Enable JavaScript to use the filters. No evaluation scores are published in this design preview. <a href="https://github.com/MingyuJ666/ControlBench">Read the benchmark documentation</a>.</p></noscript>
+</body>
+</html>
