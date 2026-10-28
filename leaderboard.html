@@ -8,9 +8,9 @@
   <title>RealControlBench</title>
   <link rel="icon" href="assets/mark.svg?v=79db890c1c" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/ManropeVariable.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=24d304958c">
+  <link rel="stylesheet" href="styles.css?v=67c263b711">
   <script defer src="catalog.js?v=8c37b051fb"></script>
-  <script defer src="app.js?v=6078b7bdbb"></script>
+  <script defer src="app.js?v=d857a7a5b9"></script>
 </head>
 <body data-page="leaderboard">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -31,8 +31,6 @@
       <div class="filter-field release-field"><span>RESULTS RELEASE</span><p><span class="status-dot muted"></span> Not published</p></div>
     </section>
     <section class="board-panel" aria-label="Methods and results">
-      <div class="board-toolbar">
-      <div class="table-meta"><div><label class="sort-label">Order <select id="sort-filter"><option id="metric-sort-option" value="metric:instruction-following.success-rate:desc">Success rate ↓</option><option value="reference">References first</option><option value="az">Method A–Z</option><option value="za">Method Z–A</option></select></label><button class="icon-button" id="share-view">Copy link <span aria-hidden="true">↗</span></button></div></div></div>
       <div class="table-scroll dashboard-viewport" tabindex="0" role="region" aria-label="All tasks comparison table"><table class="results-table" id="leaderboard-table"><caption class="sr-only">Methods across all tasks. Click a metric to sort; click again to reverse. Ranks use the selected metric, with ties sharing a rank. Missing results are unranked and listed last.</caption><thead id="results-head"></thead><tbody id="results-body"></tbody></table></div>
       <div class="empty-state" id="empty-state" hidden><h3>No methods available</h3><p>Methods will appear here when available for this base model.</p></div>
     </section>
@@ -55,7 +53,7 @@
     </section>
   </main>
   <footer id="site-footer" class="site-footer container"></footer>
-  <div id="dialog-root"></div><div class="toast" id="toast" role="status"></div>
+  <div id="dialog-root"></div>
   <noscript><p class="container">Enable JavaScript to use the filters. No evaluation scores are published in this design preview. <a href="https://github.com/MingyuJ666/ControlBench">Read the benchmark documentation</a>.</p></noscript>
 </body>
 </html>

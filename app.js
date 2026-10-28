@@ -6,17 +6,9 @@
   const external = 'target="_blank" rel="noopener noreferrer"';
   const defaultSort = 'metric:instruction-following.success-rate:desc';
   const state = { model: data.models[0].id, sort: defaultSort };
-  let toastTimer;
   let activeDialog = null;
   $('#site-header').innerHTML = `<div class="header-inner container"><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a class="active" href="#about" aria-current="location">Home</a><a href="#leaderboard">Leaderboard</a><a href="#submit">Submit a Method</a><a href="${data.repository}#-getting-started" ${external}>Documentation</a><button data-dialog="resources">Paper &amp; Code</button></nav></div>`;
   $('#site-footer').innerHTML = `<span>RealControlBench · Development preview</span><div class="footer-links"><a href="${data.repository}" ${external}>Code</a><a href="${data.dataset}" ${external}>Dataset</a></div>`;
-  function toast(message) {
-    const element = $('#toast');
-    element.textContent = message;
-    element.classList.add('visible');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => element.classList.remove('visible'), 3800);
-  }
   function openDialog(title, eyebrow, content) {
     if (activeDialog) activeDialog.close();
     const returnFocus = document.activeElement;
@@ -149,11 +141,7 @@
   function render() {
     const methods = orderedMethods();
     const rankById = ranks();
-    const sort = metricSort();
     $('#model-filter').value = state.model;
-    $('#metric-sort-option').value = sort ? state.sort : defaultSort;
-    $('#metric-sort-option').textContent = sort ? sort.column.label + (sort.direction === 'desc' ? ' ↓' : ' ↑') : 'Success rate ↓';
-    $('#sort-filter').value = state.sort;
     $('#results-head').innerHTML = tableHead();
     $('#results-body').innerHTML = methods.map((method) =>
       '<tr data-method-row="' + method.id + '"><td class="rank-column">' + (rankById.get(method.id) || '<span aria-label="Not ranked">—</span>') + '</td><th scope="row" class="method-column">' + methodCell(method) + '</th>' +
@@ -185,9 +173,7 @@
     if (['#about', '#leaderboard', '#submit', ''].includes(location.hash)) return;
     readHash(); render();
   });
-  [['#model-filter', 'model'], ['#sort-filter', 'sort']].forEach(([selector, key]) => {
-    $(selector).addEventListener('change', (event) => { state[key] = event.target.value; render(); });
-  });
+  $('#model-filter').addEventListener('change', (event) => { state.model = event.target.value; render(); });
   $('#results-head').addEventListener('click', (event) => {
     const button = event.target.closest('[data-sort-metric]');
     if (!button) return;
@@ -198,14 +184,6 @@
     render();
     $('#results-head').querySelector('[data-sort-metric="' + id + '"]').focus({ preventScroll: true });
     $('#sort-status').textContent = button.textContent.trim().replace(/[↑↓]/g, '') + ' sorted ' + (direction === 'desc' ? 'highest first.' : 'lowest first.');
-  });
-  $('#share-view').addEventListener('click', async () => {
-    const link = location.href;
-    try { if (!navigator.clipboard) throw new Error('Clipboard unavailable'); await navigator.clipboard.writeText(link); toast('Current view link copied.'); }
-    catch {
-      const dialog = openDialog('Share this view.', 'CURRENT VIEW', `<p>Copy this link to reopen the same model and sort order, with all methods and tasks displayed.${location.protocol === 'file:' ? ' This local file link works only on a device with the website files.' : ''}</p><label><span class="sr-only">Current view URL</span><input class="share-input" readonly value="${escapeHTML(link)}"></label>`);
-      dialog.querySelector('input').select();
-    }
   });
   $('#submission-model').innerHTML = data.models.map((item) => `<option value="${item.name}">${item.name}</option>`).join('') + '<option value="Other">Other</option>';
   $('#submission-form').addEventListener('submit', (event) => {
