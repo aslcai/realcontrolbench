@@ -8,9 +8,9 @@
   <title>RealControlBench</title>
   <link rel="icon" href="assets/mark.svg?v=79db890c1c" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/ManropeVariable.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=766e3440c7">
+  <link rel="stylesheet" href="styles.css?v=bc9dbc907c">
   <script defer src="catalog.js?v=8c37b051fb"></script>
-  <script defer src="app.js?v=36f3508918"></script>
+  <script defer src="app.js?v=d30b0af0e5"></script>
 </head>
 <body data-page="leaderboard">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -35,19 +35,16 @@
     <p class="sr-only" id="sort-status" role="status" aria-live="polite"></p>
     <div class="board-notes"><details><summary>Metrics and evaluation details <span aria-hidden="true">+</span></summary><div id="metric-notes"></div><p>Compare methods within the same base model, task, and evaluation protocol. A missing result is not a zero.</p></details></div>
     <section class="submission-panel" id="submit" aria-labelledby="submission-heading">
-      <div class="submission-heading"><h2 id="submission-heading">Submit a method</h2><p>Share your method, its paper, and reproducible evaluation results.</p></div>
-      <form id="submission-form" action="https://github.com/MingyuJ666/ControlBench/issues/new" method="get" target="_blank" rel="noopener noreferrer">
-        <input type="hidden" name="title" id="submission-title"><input type="hidden" name="body" id="submission-body">
-        <div class="submission-fields">
-          <label>Method name<input id="submission-name" type="text" maxlength="100" required placeholder="Name of your method" autocomplete="off"></label>
-          <label>Base model<select id="submission-model"></select></label>
-          <label>Paper URL (optional)<input id="submission-paper" type="url" pattern="https?://.*" maxlength="300" placeholder="https://arxiv.org/abs/…"></label>
-          <label>Code URL<input id="submission-code" type="url" pattern="https?://.*" maxlength="300" required placeholder="https://github.com/…"></label>
-          <label class="full-width">Results URL (optional)<input id="submission-results" type="url" pattern="https?://.*" maxlength="300" placeholder="Link to your evaluation results"></label>
-          <label class="full-width">Evaluation settings and notes (optional)<textarea id="submission-notes" rows="3" maxlength="1200" placeholder="Tasks, layers, steering strength, and how to reproduce your results"></textarea></label>
-        </div>
-        <div class="submission-actions"><p>Review and submit on GitHub. A GitHub account is required.</p><button class="button primary" type="submit">Continue on GitHub ↗</button></div>
-      </form>
+      <div class="submission-heading"><h2 id="submission-heading">Submit a method</h2><p>Submit your evaluation results, logs, and trajectories for review.</p></div>
+      <ol class="submission-steps">
+        <li><span class="submission-step-number" aria-hidden="true">01</span><h3>Run the benchmark</h3><p>Save your results, evaluation logs, full trajectories, and run configuration.</p></li>
+        <li><span class="submission-step-number" aria-hidden="true">02</span><h3>Prepare your submission</h3><p>Use the repository template. Include artifact links and instructions to reproduce your results.</p></li>
+        <li><span class="submission-step-number" aria-hidden="true">03</span><h3>Open a pull request</h3><p>Add your submission to your fork. We check the files and review the results before listing your method.</p></li>
+      </ol>
+      <div class="submission-actions">
+        <a class="submission-guide" href="https://github.com/MingyuJ666/ControlBench/blob/main/submissions/README.md" target="_blank" rel="noopener noreferrer">Submission guide &amp; template ↗</a>
+        <a class="button primary" href="https://github.com/MingyuJ666/ControlBench/compare?expand=1&amp;template=leaderboard_submission.md" target="_blank" rel="noopener noreferrer">Submit via pull request ↗</a>
+      </div>
     </section>
   </main>
   <footer id="site-footer" class="site-footer container"></footer>

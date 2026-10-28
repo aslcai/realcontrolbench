@@ -198,24 +198,4 @@
     $('#results-head').querySelector('[data-sort-metric="' + id + '"]').focus({ preventScroll: true });
     $('#sort-status').textContent = button.textContent.trim().replace(/[↑↓]/g, '') + ' sorted ' + (direction === 'desc' ? 'highest first.' : 'lowest first.');
   });
-  $('#submission-model').innerHTML = data.models.map((item) => `<option value="${item.name}">${item.name}</option>`).join('') + '<option value="Other">Other</option>';
-  $('#submission-form').addEventListener('submit', (event) => {
-    const name = $('#submission-name').value.trim();
-    if (!name) {
-      event.preventDefault();
-      $('#submission-name').setCustomValidity('Enter a method name.');
-      $('#submission-name').reportValidity();
-      return;
-    }
-    $('#submission-title').value = 'Method submission: ' + name;
-    $('#submission-body').value = [
-      '## Method', name,
-      '## Paper', $('#submission-paper').value.trim() || 'Not provided',
-      '## Code', $('#submission-code').value.trim(),
-      '## Base model', $('#submission-model').value,
-      '## Evaluation results', $('#submission-results').value.trim() || 'Not provided',
-      '## Evaluation settings and notes', $('#submission-notes').value.trim() || 'Not provided'
-    ].join('\n\n');
-  });
-  $('#submission-name').addEventListener('input', () => $('#submission-name').setCustomValidity(''));
 })();
