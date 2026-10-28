@@ -51,16 +51,15 @@ h1,h2,h3,p{margin:0}
 .search-field>span[aria-hidden]{display:none}
 .search-field input{width:100%;border:0;outline:none;font-size:13px;background:transparent}
 .search-field:focus-within{outline:2px solid #737373;outline-offset:2px}
-.table-meta{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:15px 20px 11px;font-size:12px;color:#737373}
+.table-meta{display:flex;align-items:center;justify-content:flex-end;gap:15px;padding:15px 20px 11px;font-size:12px;color:#737373}
 .table-meta>div{display:flex;align-items:center;gap:20px}
 .sort-label{font-size:12px}
 .sort-label select{background:#fff;border:0;font-size:12px;color:#525252;padding:2px 0 2px 5px}
 .icon-button,.text-button{font-size:12px;color:#525252;padding:3px 0}
 .icon-button:hover,.text-button:hover{text-decoration:underline;text-underline-offset:4px}
 .icon-button span{display:none}
-.table-scroll-hint{font-size:12px;color:#8a8a8a;line-height:1.6;margin:0;padding:0 20px 14px}
 .table-scroll{overflow-x:auto}
-.dashboard-viewport{position:relative;width:100%;height:clamp(320px,60vh,480px);overflow:auto;border-top:1px solid var(--line);border-bottom:1px solid var(--line);scrollbar-gutter:stable;overscroll-behavior-x:contain;isolation:isolate;scrollbar-color:#c5c5c5 #fafafa;scrollbar-width:thin}
+.dashboard-viewport{position:relative;width:100%;height:clamp(320px,60vh,480px);overflow:auto;border-top:1px solid var(--line);scrollbar-gutter:stable;overscroll-behavior-x:contain;isolation:isolate;scrollbar-color:#c5c5c5 #fafafa;scrollbar-width:thin}
 .dashboard-viewport:focus-visible{outline:2px solid #737373;outline-offset:-2px}
 .results-table{width:100%;border-collapse:collapse;text-align:left;white-space:nowrap;font-size:15px}
 .results-table th{padding:12px 18px;background:#fafafa;border-bottom:1px solid var(--line);font-size:14px;font-weight:500;color:#525252;text-align:right}
@@ -73,7 +72,6 @@ h1,h2,h3,p{margin:0}
 .method-link{padding:0;font-size:16px;font-weight:500;color:#303030;line-height:24px;text-align:left}
 .method-link:hover{text-decoration:underline;text-underline-offset:4px}
 .method-link span{display:none}
-.method-kind{margin-left:9px;color:#8c8c8c;font-size:10px;font-weight:400}
 .metric-value{font:15px Inter,Arial,sans-serif;font-variant-numeric:tabular-nums;color:#999}
 .status-label{font-size:13px;color:#8a8a8a}
 .results-table td:last-child a{font-size:13px}
@@ -94,11 +92,6 @@ h1,h2,h3,p{margin:0}
 #leaderboard-table tbody th,#leaderboard-table tbody td{height:56px;padding-top:15px;padding-bottom:15px;vertical-align:middle;border-bottom:1px solid #f0f0f0}
 #leaderboard-table tbody .method-column{font-weight:400;font-size:16px}
 #leaderboard-table tbody tr:last-child>*{border-bottom:0}
-#leaderboard-table .method-kind:empty{display:none}
-.table-bottom{display:flex;justify-content:space-between;gap:20px;font-size:11px;color:#8a8a8a;padding:14px 20px}
-.table-bottom p{display:flex;align-items:center;gap:7px}
-.legend-dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:#737373}
-.divider{margin-inline:5px;color:#ccc}
 .empty-state{padding:32px;text-align:center}
 .empty-state>span{display:none}
 .empty-state h3{font-size:17px;font-weight:500}
@@ -149,7 +142,7 @@ dialog::backdrop{background:#00000040}
 body.dialog-open{overflow:hidden}
 @media(max-width:1000px){
   .container{width:calc(100% - 40px)}
-  .board-toolbar,.table-meta,.table-bottom{flex-wrap:wrap}
+  .board-toolbar,.table-meta{flex-wrap:wrap}
   .board-toolbar{gap:10px}
   .table-meta>div{gap:14px}
   .project-intro h1{font-size:29px}
@@ -173,14 +166,11 @@ body.dialog-open{overflow:hidden}
   .board-toolbar{padding:12px 14px 0}
   .table-meta{padding:13px 14px 10px}
   .table-meta>div{flex-wrap:wrap;gap:12px}
-  .table-scroll-hint{padding:0 14px 12px;font-size:11px}
-  .table-bottom{padding:13px 14px;font-size:10px;gap:8px}
   .dashboard-viewport{height:clamp(300px,60vh,450px)}
   #leaderboard-table{--select-width:32px;--method-width:155px}
   #leaderboard-table .metric-heading{min-width:150px}
   #leaderboard-table .method-column{padding-left:10px;padding-right:10px}
   #leaderboard-table .method-link{font-size:14px}
-  #leaderboard-table .method-kind{display:none}
   .segmented{gap:18px}
   .segmented button{font-size:13px}
   .search-field{min-width:0;width:100%}

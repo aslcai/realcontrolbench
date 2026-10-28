@@ -134,10 +134,9 @@ No files are uploaded and no evaluation is queued.</p></div><a class="button pri
     $('#sort-filter').value = state.sort;
     $('#method-search').value = state.query;
     document.querySelectorAll('[data-kind]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.kind === state.kind)));
-    $('#result-count').textContent = `${methods.length} ${methods.length === 1 ? 'method' : 'methods'} · ${model().name}`;
     $('#results-head').innerHTML = tableHead();
     $('#results-body').innerHTML = methods.map((method) =>
-      '<tr class="' + (method.kind === 'baseline' ? 'baseline-row' : '') + '"><td class="select-column"><input type="checkbox" data-select="' + method.id + '" aria-label="Compare ' + escapeHTML(methodName(method)) + '" ' + (selected.has(method.id) ? 'checked' : '') + '></td><th scope="row" class="method-column"><button class="method-link" data-method="' + method.id + '">' + escapeHTML(methodName(method)) + '</button><span class="method-kind">' + (method.kind === 'baseline' ? 'baseline' : '') + '</span></th>' +
+      '<tr class="' + (method.kind === 'baseline' ? 'baseline-row' : '') + '"><td class="select-column"><input type="checkbox" data-select="' + method.id + '" aria-label="Compare ' + escapeHTML(methodName(method)) + '" ' + (selected.has(method.id) ? 'checked' : '') + '></td><th scope="row" class="method-column"><button class="method-link" data-method="' + method.id + '">' + escapeHTML(methodName(method)) + '</button></th>' +
       metricColumns.map((column) => '<td class="metric-value ' + (column.first ? 'group-start' : '') + '"><span aria-label="Not published">—</span></td>').join('') +
       '<td class="group-start"><span class="status-label">Not published</span></td><td><button class="text-button" data-method="' + method.id + '" aria-label="Resources for ' + escapeHTML(methodName(method)) + '">Details</button></td></tr>'
     ).join('');
