@@ -5,7 +5,7 @@
   const escapeHTML = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
   const external = 'target="_blank" rel="noopener noreferrer"';
   const defaultSort = 'metric:instruction-following.success-rate:desc';
-  const state = { model: data.models[0].id, kind: 'all', sort: defaultSort };
+  const state = { model: data.models[0].id, sort: defaultSort };
   let toastTimer;
   let activeDialog = null;
   $('#site-header').innerHTML = `<div class="header-inner container"><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a class="active" href="#about" aria-current="location">Home</a><a href="#leaderboard">Leaderboard</a><a href="#submit">Submit a Method</a><a href="${data.repository}#-getting-started" ${external}>Documentation</a><button data-dialog="resources">Paper &amp; Code</button></nav></div>`;
@@ -108,21 +108,19 @@
   function readHash() {
     const params = new URLSearchParams(location.search || (location.hash.includes('=') ? location.hash.slice(1) : ''));
     state.model = data.models.some((item) => item.id === params.get('model')) ? params.get('model') : data.models[0].id;
-    // Legacy task/track links now open the same all-task table.
-    state.kind = ['all', 'steering', 'baseline'].includes(params.get('kind')) ? params.get('kind') : 'all';
+    // Legacy task, track, category and search parameters no longer filter the table.
     const sort = params.get('sort') || defaultSort;
     state.sort = ['reference', 'az', 'za'].includes(sort) || metricSort(sort) ? sort : defaultSort;
   }
   function syncURL() {
     const params = new URLSearchParams({ model: state.model });
-    if (state.kind !== 'all') params.set('kind', state.kind);
     if (state.sort !== defaultSort) params.set('sort', state.sort);
     try { history.replaceState(null, '', `?${params}${['#about', '#leaderboard', '#submit'].includes(location.hash) ? location.hash : ''}`); } catch { /* File previews may restrict history. Filters still work. */ }
   }
   function modelMethods() { return data.methods.filter((method) => !method.models || method.models.includes(state.model)); }
-  function filteredMethods() {
+  function orderedMethods() {
     const sort = metricSort();
-    return modelMethods().filter((method) => state.kind === 'all' || state.kind === method.kind).sort((a, b) => {
+    return modelMethods().sort((a, b) => {
       if (sort) {
         const av = score(a, sort.column), bv = score(b, sort.column);
         if (av === null && bv !== null) return 1;
@@ -149,14 +147,13 @@
     return '<button class="method-link" data-method="' + method.id + '">' + escapeHTML(methodName(method)) + '</button>';
   }
   function render() {
-    const methods = filteredMethods();
+    const methods = orderedMethods();
     const rankById = ranks();
     const sort = metricSort();
     $('#model-filter').value = state.model;
     $('#metric-sort-option').value = sort ? state.sort : defaultSort;
     $('#metric-sort-option').textContent = sort ? sort.column.label + (sort.direction === 'desc' ? ' ↓' : ' ↑') : 'Success rate ↓';
     $('#sort-filter').value = state.sort;
-    document.querySelectorAll('[data-kind]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.kind === state.kind)));
     $('#results-head').innerHTML = tableHead();
     $('#results-body').innerHTML = methods.map((method) =>
       '<tr data-method-row="' + method.id + '"><td class="rank-column">' + (rankById.get(method.id) || '<span aria-label="Not ranked">—</span>') + '</td><th scope="row" class="method-column">' + methodCell(method) + '</th>' +
@@ -191,8 +188,6 @@
   [['#model-filter', 'model'], ['#sort-filter', 'sort']].forEach(([selector, key]) => {
     $(selector).addEventListener('change', (event) => { state[key] = event.target.value; render(); });
   });
-  document.querySelectorAll('[data-kind]').forEach((button) => button.addEventListener('click', () => { state.kind = button.dataset.kind; render(); }));
-  $('#clear-filters').addEventListener('click', () => { state.kind = 'all'; render(); $('[data-kind=all]').focus(); });
   $('#results-head').addEventListener('click', (event) => {
     const button = event.target.closest('[data-sort-metric]');
     if (!button) return;
@@ -208,7 +203,7 @@
     const link = location.href;
     try { if (!navigator.clipboard) throw new Error('Clipboard unavailable'); await navigator.clipboard.writeText(link); toast('Current view link copied.'); }
     catch {
-      const dialog = openDialog('Share this view.', 'CURRENT FILTERS', `<p>Copy this link to reopen the same model and filters, with all tasks displayed.${location.protocol === 'file:' ? ' This local file link works only on a device with the website files.' : ''}</p><label><span class="sr-only">Current view URL</span><input class="share-input" readonly value="${escapeHTML(link)}"></label>`);
+      const dialog = openDialog('Share this view.', 'CURRENT VIEW', `<p>Copy this link to reopen the same model and sort order, with all methods and tasks displayed.${location.protocol === 'file:' ? ' This local file link works only on a device with the website files.' : ''}</p><label><span class="sr-only">Current view URL</span><input class="share-input" readonly value="${escapeHTML(link)}"></label>`);
       dialog.querySelector('input').select();
     }
   });

@@ -8,9 +8,9 @@
   <title>RealControlBench</title>
   <link rel="icon" href="assets/mark.svg?v=79db890c1c" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/ManropeVariable.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=ec3136686d">
+  <link rel="stylesheet" href="styles.css?v=24d304958c">
   <script defer src="catalog.js?v=8c37b051fb"></script>
-  <script defer src="app.js?v=e0f72f0351"></script>
+  <script defer src="app.js?v=6078b7bdbb"></script>
 </head>
 <body data-page="leaderboard">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -31,10 +31,10 @@
       <div class="filter-field release-field"><span>RESULTS RELEASE</span><p><span class="status-dot muted"></span> Not published</p></div>
     </section>
     <section class="board-panel" aria-label="Methods and results">
-      <div class="board-toolbar"><div class="segmented" role="group" aria-label="Method category"><button data-kind="all" aria-pressed="true">All methods</button><button data-kind="steering" aria-pressed="false">Steering</button><button data-kind="baseline" aria-pressed="false">Baselines</button></div>
+      <div class="board-toolbar">
       <div class="table-meta"><div><label class="sort-label">Order <select id="sort-filter"><option id="metric-sort-option" value="metric:instruction-following.success-rate:desc">Success rate ↓</option><option value="reference">References first</option><option value="az">Method A–Z</option><option value="za">Method Z–A</option></select></label><button class="icon-button" id="share-view">Copy link <span aria-hidden="true">↗</span></button></div></div></div>
       <div class="table-scroll dashboard-viewport" tabindex="0" role="region" aria-label="All tasks comparison table"><table class="results-table" id="leaderboard-table"><caption class="sr-only">Methods across all tasks. Click a metric to sort; click again to reverse. Ranks use the selected metric, with ties sharing a rank. Missing results are unranked and listed last.</caption><thead id="results-head"></thead><tbody id="results-body"></tbody></table></div>
-      <div class="empty-state" id="empty-state" hidden><span aria-hidden="true">⌕</span><h3>No matching methods</h3><p>Choose another category or reset the filters.</p><button class="button secondary" id="clear-filters">Reset filters</button></div>
+      <div class="empty-state" id="empty-state" hidden><h3>No methods available</h3><p>Methods will appear here when available for this base model.</p></div>
     </section>
     <p class="sr-only" id="sort-status" role="status" aria-live="polite"></p>
     <div class="board-notes"><details><summary>Metrics and evaluation details <span aria-hidden="true">+</span></summary><div id="metric-notes"></div><p>Compare methods within the same base model, task, and evaluation protocol. A missing result is not a zero.</p></details></div>

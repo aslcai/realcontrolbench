@@ -42,10 +42,7 @@ h1,h2,h3,p{margin:0}
 .release-field{display:none}
 .text-link{color:#404040;font-size:14px}
 .board-panel{background:#fff;border:1px solid #d6d6dc;border-radius:16px;overflow:hidden;box-shadow:0 1px 2px #14121f0a,0 8px 24px #14121f0a,0 24px 56px -24px #14121f24}
-.board-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px 24px;padding:0 22px;background:#fafafa}
-.segmented{display:flex;gap:23px;align-self:stretch}
-.segmented button{padding:19px 0 17px;border-bottom:2px solid transparent;margin-bottom:0;color:#737373;font-size:14px}
-.segmented button[aria-pressed=true]{color:#202020;border-bottom-color:#262626;font-weight:600}
+.board-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:12px 24px;padding:0 22px;background:#fafafa}
 .table-meta{display:flex;align-items:center;justify-content:flex-end;gap:15px;padding:14px 0;font-size:15px;color:#585858}
 .table-meta>div{display:flex;align-items:center;gap:20px}
 .sort-label{font-size:15px}
@@ -86,7 +83,6 @@ h1,h2,h3,p{margin:0}
 #leaderboard-table .text-button{padding:0;line-height:24px}
 #leaderboard-table tbody tr:last-child>*{border-bottom:0}
 .empty-state{padding:32px;text-align:center}
-.empty-state>span{display:none}
 .empty-state h3{font-size:17px;font-weight:500}
 .empty-state p{margin:7px 0 14px;color:#737373;font-size:14px}
 .board-notes{margin:22px 0 0}
@@ -174,7 +170,5 @@ body.dialog-open{overflow:hidden}
   #leaderboard-table .metric-heading{min-width:150px}
   #leaderboard-table .method-column{padding-left:10px;padding-right:10px}
   #leaderboard-table .method-link{font-size:16px}
-  .segmented{gap:18px}
-  .segmented button{font-size:15px}
   .site-footer{align-items:flex-start;font-size:14px}
 }
