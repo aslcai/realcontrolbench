@@ -141,7 +141,7 @@
   function render() {
     const methods = orderedMethods();
     const rankById = ranks();
-    $('#model-filter').value = state.model;
+    $('#model-filter').querySelectorAll('[data-model]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.model === state.model)));
     $('#results-head').innerHTML = tableHead();
     $('#results-body').innerHTML = methods.map((method) =>
       '<tr data-method-row="' + method.id + '"><td class="rank-column">' + (rankById.get(method.id) || '<span aria-label="Not ranked">—</span>') + '</td><th scope="row" class="method-column">' + methodCell(method) + '</th>' +
@@ -155,7 +155,7 @@
     ).join('');
     syncURL();
   }
-  $('#model-filter').innerHTML = data.models.map((item) => `<option value="${item.id}">${item.name}</option>`).join('');
+  $('#model-filter').innerHTML = data.models.map((item) => `<button type="button" data-model="${item.id}" aria-pressed="false">${escapeHTML(item.name)}</button>`).join('');
   readHash();
   render();
   function updateNavigation() {
@@ -173,7 +173,20 @@
     if (['#about', '#leaderboard', '#submit', ''].includes(location.hash)) return;
     readHash(); render();
   });
-  $('#model-filter').addEventListener('change', (event) => { state.model = event.target.value; render(); });
+  function revealActiveModel() {
+    const bar = $('#model-filter');
+    const active = bar.querySelector('[aria-pressed=true]');
+    if (active) bar.scrollLeft = active.offsetLeft - (bar.clientWidth - active.offsetWidth) / 2;
+  }
+  $('#model-filter').addEventListener('click', (event) => {
+    const button = event.target.closest('[data-model]');
+    if (!button) return;
+    state.model = button.dataset.model;
+    render();
+    revealActiveModel();
+  });
+  new ResizeObserver(revealActiveModel).observe($('#model-filter'));
+  document.fonts.ready.then(revealActiveModel);
   $('#results-head').addEventListener('click', (event) => {
     const button = event.target.closest('[data-sort-metric]');
     if (!button) return;

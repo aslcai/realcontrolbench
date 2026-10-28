@@ -8,9 +8,9 @@
   <title>RealControlBench</title>
   <link rel="icon" href="assets/mark.svg?v=79db890c1c" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/ManropeVariable.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=67c263b711">
+  <link rel="stylesheet" href="styles.css?v=a8d29be43b">
   <script defer src="catalog.js?v=8c37b051fb"></script>
-  <script defer src="app.js?v=d857a7a5b9"></script>
+  <script defer src="app.js?v=36f3508918"></script>
 </head>
 <body data-page="leaderboard">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -27,8 +27,7 @@
     <div class="board-heading" id="leaderboard"><h2>Leaderboard</h2></div>
     <p class="results-notice">Evaluation results are not yet published.</p>
     <section class="board-filters" aria-label="Evaluation settings">
-      <label class="filter-field"><span>Base model</span><select id="model-filter"></select></label>
-      <div class="filter-field release-field"><span>RESULTS RELEASE</span><p><span class="status-dot muted"></span> Not published</p></div>
+      <div class="model-switcher" id="model-filter" role="group" aria-label="Base model"></div>
     </section>
     <section class="board-panel" aria-label="Methods and results">
       <div class="table-scroll dashboard-viewport" tabindex="0" role="region" aria-label="All tasks comparison table"><table class="results-table" id="leaderboard-table"><caption class="sr-only">Methods across all tasks. Click a metric to sort; click again to reverse. Ranks use the selected metric, with ties sharing a rank. Missing results are unranked and listed last.</caption><thead id="results-head"></thead><tbody id="results-body"></tbody></table></div>
