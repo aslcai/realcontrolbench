@@ -5,10 +5,10 @@
   const escapeHTML = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
   const external = 'target="_blank" rel="noopener noreferrer"';
   const defaultSort = 'metric:instruction-following.success-rate:desc';
-  const state = { model: data.models[0].id, kind: 'all', query: '', sort: defaultSort };
+  const state = { model: data.models[0].id, kind: 'all', sort: defaultSort };
   let toastTimer;
   let activeDialog = null;
-  $('#site-header').innerHTML = `<div class="header-inner"><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a class="active" href="#about" aria-current="location">Home</a><a href="#leaderboard">Leaderboard</a><a href="#submit">Submit a Method</a><a href="${data.repository}#-getting-started" ${external}>Documentation</a><button data-dialog="resources">Paper &amp; Code</button></nav></div>`;
+  $('#site-header').innerHTML = `<div class="header-inner container"><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a class="active" href="#about" aria-current="location">Home</a><a href="#leaderboard">Leaderboard</a><a href="#submit">Submit a Method</a><a href="${data.repository}#-getting-started" ${external}>Documentation</a><button data-dialog="resources">Paper &amp; Code</button></nav></div>`;
   $('#site-footer').innerHTML = `<span>RealControlBench · Development preview</span><div class="footer-links"><a href="${data.repository}" ${external}>Code</a><a href="${data.dataset}" ${external}>Dataset</a></div>`;
   function toast(message) {
     const element = $('#toast');
@@ -110,24 +110,19 @@
     state.model = data.models.some((item) => item.id === params.get('model')) ? params.get('model') : data.models[0].id;
     // Legacy task/track links now open the same all-task table.
     state.kind = ['all', 'steering', 'baseline'].includes(params.get('kind')) ? params.get('kind') : 'all';
-    state.query = (params.get('q') || '').slice(0, 150);
     const sort = params.get('sort') || defaultSort;
     state.sort = ['reference', 'az', 'za'].includes(sort) || metricSort(sort) ? sort : defaultSort;
   }
   function syncURL() {
     const params = new URLSearchParams({ model: state.model });
     if (state.kind !== 'all') params.set('kind', state.kind);
-    if (state.query) params.set('q', state.query);
     if (state.sort !== defaultSort) params.set('sort', state.sort);
     try { history.replaceState(null, '', `?${params}${['#about', '#leaderboard', '#submit'].includes(location.hash) ? location.hash : ''}`); } catch { /* File previews may restrict history. Filters still work. */ }
   }
   function modelMethods() { return data.methods.filter((method) => !method.models || method.models.includes(state.model)); }
   function filteredMethods() {
     const sort = metricSort();
-    return modelMethods().filter((method) =>
-      (state.kind === 'all' || state.kind === method.kind) &&
-      `${methodName(method)} ${method.name}`.toLowerCase().includes(state.query.trim().toLowerCase())
-    ).sort((a, b) => {
+    return modelMethods().filter((method) => state.kind === 'all' || state.kind === method.kind).sort((a, b) => {
       if (sort) {
         const av = score(a, sort.column), bv = score(b, sort.column);
         if (av === null && bv !== null) return 1;
@@ -161,7 +156,6 @@
     $('#metric-sort-option').value = sort ? state.sort : defaultSort;
     $('#metric-sort-option').textContent = sort ? sort.column.label + (sort.direction === 'desc' ? ' ↓' : ' ↑') : 'Success rate ↓';
     $('#sort-filter').value = state.sort;
-    $('#method-search').value = state.query;
     document.querySelectorAll('[data-kind]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.kind === state.kind)));
     $('#results-head').innerHTML = tableHead();
     $('#results-body').innerHTML = methods.map((method) =>
@@ -197,9 +191,8 @@
   [['#model-filter', 'model'], ['#sort-filter', 'sort']].forEach(([selector, key]) => {
     $(selector).addEventListener('change', (event) => { state[key] = event.target.value; render(); });
   });
-  $('#method-search').addEventListener('input', (event) => { state.query = event.target.value.slice(0, 150); render(); });
   document.querySelectorAll('[data-kind]').forEach((button) => button.addEventListener('click', () => { state.kind = button.dataset.kind; render(); }));
-  $('#clear-filters').addEventListener('click', () => { state.query = ''; state.kind = 'all'; render(); $('#method-search').focus(); });
+  $('#clear-filters').addEventListener('click', () => { state.kind = 'all'; render(); $('[data-kind=all]').focus(); });
   $('#results-head').addEventListener('click', (event) => {
     const button = event.target.closest('[data-sort-metric]');
     if (!button) return;
