@@ -4,11 +4,11 @@
   const $ = (selector) => document.querySelector(selector);
   const escapeHTML = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
   const external = 'target="_blank" rel="noopener noreferrer"';
-  const state = { model: data.models[0].id, kind: 'all', query: '', sort: 'reference' };
-  const selected = new Set();
+  const defaultSort = 'metric:instruction-following.success-rate:desc';
+  const state = { model: data.models[0].id, kind: 'all', query: '', sort: defaultSort };
   let toastTimer;
   let activeDialog = null;
-  $('#site-header').innerHTML = `<div class="header-inner"><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a class="active" href="#about" aria-current="location">Home</a><a href="#leaderboard">Leaderboard</a><button data-dialog="submit">Submit a Method</button><a href="${data.repository}#-getting-started" ${external}>Documentation</a><button data-dialog="resources">Paper &amp; Code</button></nav></div>`;
+  $('#site-header').innerHTML = `<div class="header-inner"><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a class="active" href="#about" aria-current="location">Home</a><a href="#leaderboard">Leaderboard</a><a href="#submit">Submit a Method</a><a href="${data.repository}#-getting-started" ${external}>Documentation</a><button data-dialog="resources">Paper &amp; Code</button></nav></div>`;
   $('#site-footer').innerHTML = `<span>RealControlBench · Development preview</span><div class="footer-links"><a href="${data.repository}" ${external}>Code</a><a href="${data.dataset}" ${external}>Dataset</a></div>`;
   function toast(message) {
     const element = $('#toast');
@@ -17,11 +17,10 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => element.classList.remove('visible'), 3800);
   }
-  function openDialog(title, eyebrow, content, wide = false) {
+  function openDialog(title, eyebrow, content) {
     if (activeDialog) activeDialog.close();
     const returnFocus = document.activeElement;
     const dialog = document.createElement('dialog');
-    dialog.className = wide ? 'dialog-compare' : '';
     dialog.setAttribute('aria-labelledby', 'dialog-title');
     dialog.innerHTML = `<div class="dialog-header"><div><p class="eyebrow">${escapeHTML(eyebrow)}</p><h2 id="dialog-title">${escapeHTML(title)}</h2></div><button class="dialog-close" aria-label="Close dialog" autofocus>×</button></div><div class="dialog-content">${content}</div>`;
     $('#dialog-root').append(dialog);
@@ -41,10 +40,6 @@
     document.body.classList.add('dialog-open');
     dialog.showModal();
     return dialog;
-  }
-  function showSubmit() {
-    openDialog('Submit a method', 'SUBMIT TO REALCONTROLBENCH', `<p>Share your steering method, its evaluation settings, and the evidence behind its results.</p><div class="submission-options"><div class="submission-option"><span>01 / RESULTS</span><h3>Upload evaluation results</h3><p>Run the benchmark and provide its generated result files alongside your method information.</p></div><div class="submission-option"><span>02 / METHOD ARTIFACTS</span><h3>Provide your method</h3><p>Share the code or artifacts and configuration needed for the benchmark team to evaluate it.</p></div></div><div class="dialog-message"><strong>Submissions are not open yet.</strong><p>This is a preview of the submission options.
-No files are uploaded and no evaluation is queued.</p></div><a class="button primary" href="${data.repository}" ${external}>Read the evaluation guide</a>`);
   }
   function showResources() {
     openDialog('Paper and code', 'PAPER & CODE', `<p>Evaluation code, data, and task documentation for RealControlBench.</p><div class="resource-list"><a class="resource-item" href="${data.repository}" ${external}>Code repository <span>GitHub</span></a><a class="resource-item" href="${data.dataset}" ${external}>Benchmark dataset <span>Hugging Face</span></a><a class="resource-item" href="${data.repository}#-getting-started" ${external}>Evaluation documentation <span>Getting started</span></a><div class="resource-item">Research paper <span>Link forthcoming</span></div></div>`);
@@ -67,9 +62,18 @@ No files are uploaded and no evaluation is queued.</p></div><a class="button pri
     ];
   });
   const metricColumns = metricGroups.flatMap((group) => group.metrics.map((label, index) => ({
-    group, label, note: group.notes[index], first: index === 0,
-    exportLabel: [group.task.label, group.track && group.label, label].filter(Boolean).join(' / ')
+    id: [group.task.id, group.track, label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-$/, '')].filter(Boolean).join('.'),
+    label: label.replace(/\s*↑$/, ''), note: group.notes[index], first: index === 0
   })));
+  function metricSort(value = state.sort) {
+    const [type, id, direction] = value.split(':');
+    const column = metricColumns.find((item) => item.id === id);
+    return type === 'metric' && column && ['asc', 'desc'].includes(direction) ? { column, direction } : null;
+  }
+  function score(method, column) {
+    const value = data.results?.[state.model]?.[method.id]?.[column.id];
+    return typeof value === 'number' && Number.isFinite(value) ? value : null;
+  }
   function methodName(method) { return method.id === 'prompted' ? 'Prompted / CoT' : method.name; }
   function taskLinks() {
     return data.tasks.map((task) => '<a class="resource-item" href="' + data.repository + '/tree/main/' + task.docs + '" ' + external + '>' + escapeHTML(task.label) + ' <span>Task code</span></a>').join('');
@@ -79,20 +83,25 @@ No files are uploaded and no evaluation is queued.</p></div><a class="button pri
     if (!method) return;
     openDialog(methodName(method), 'METHOD PROFILE / PREVIEW',
       '<div class="dialog-meta"><span class="tag">' + (method.kind === 'baseline' ? 'Reference baseline' : 'Steering method') + '</span><span class="tag">' + escapeHTML(model().name) + '</span><span class="tag">All tasks</span></div>' +
-      '<p>' + escapeHTML(method.description) + '</p><div class="dialog-message"><strong>Results not published in this preview.</strong><p>Authors, artifacts, intervention configuration, and per-task scores will be linked to an evaluated submission. No layer, strength, or score is implied by this catalogue entry.</p></div><div class="resource-list">' + taskLinks() + '</div>');
+      '<p>' + escapeHTML(method.description) + '</p><div class="resource-list">' + taskLinks() + '</div>');
   }
   function tableHead() {
-    const groups = metricGroups.map((group) => {
-      const name = group.task.id === 'tool-use' ? 'Tool use' : group.task.short;
-      const track = group.track ? '<span class="track-label">' + escapeHTML(group.label) + '</span>' : '';
-      return '<th scope="colgroup" class="task-group" colspan="' + group.metrics.length + '"><span class="group-title">' + escapeHTML(name) + track + '</span></th>';
+    const groups = data.tasks.map((task) => {
+      const count = metricGroups.filter((group) => group.task.id === task.id).reduce((sum, group) => sum + group.metrics.length, 0);
+      return '<th scope="colgroup" class="task-group" colspan="' + count + '"><span class="group-title">' + escapeHTML(task.id === 'tool-use' ? 'Tool use' : task.short) + '</span></th>';
     }).join('');
-    const metrics = metricColumns.map((column) => '<th scope="col" class="metric-heading ' + (column.first ? 'group-start' : '') + '" title="' + escapeHTML(column.note) + '">' + escapeHTML(column.label) + '</th>').join('');
-    return '<tr><th scope="col" class="select-column" rowspan="2"><span class="sr-only">Select for comparison</span></th><th scope="col" class="method-column" rowspan="2">Method</th>' + groups + '<th scope="col" class="utility-heading" rowspan="2">Results</th><th scope="col" class="utility-heading" rowspan="2">Resources</th></tr><tr>' + metrics + '</tr>';
+    const sort = metricSort();
+    const metrics = metricColumns.map((column) => {
+      const active = sort?.column.id === column.id;
+      const direction = active ? sort.direction : null;
+      const next = direction === 'desc' ? 'ascending' : 'descending';
+      return '<th scope="col" class="metric-heading ' + (column.first ? 'group-start' : '') + '"' + (active ? ' aria-sort="' + (direction === 'desc' ? 'descending' : 'ascending') + '"' : '') + '><button class="metric-sort" data-sort-metric="' + column.id + '" title="' + escapeHTML(column.note) + ' Higher is better. Click to sort ' + next + '." aria-label="' + escapeHTML(column.label) + ': sort ' + next + '">' + escapeHTML(column.label) + '<span aria-hidden="true">' + (direction === 'desc' ? '↓' : '↑') + '</span></button></th>';
+    }).join('');
+    return '<tr><th scope="col" class="rank-column" rowspan="2">Rank</th><th scope="col" class="method-column" rowspan="2">Method</th>' + groups + '<th scope="col" class="utility-heading" rowspan="2">Results</th><th scope="col" class="utility-heading" rowspan="2">Resources</th></tr><tr>' + metrics + '</tr>';
   }
   document.addEventListener('click', (event) => {
     const dialogButton = event.target.closest('[data-dialog]');
-    if (dialogButton) ({ submit: showSubmit, resources: showResources })[dialogButton.dataset.dialog]?.();
+    if (dialogButton) ({ resources: showResources })[dialogButton.dataset.dialog]?.();
     const methodButton = event.target.closest('[data-method]');
     if (methodButton) showMethod(methodButton.dataset.method);
   });
@@ -102,57 +111,76 @@ No files are uploaded and no evaluation is queued.</p></div><a class="button pri
     // Legacy task/track links now open the same all-task table.
     state.kind = ['all', 'steering', 'baseline'].includes(params.get('kind')) ? params.get('kind') : 'all';
     state.query = (params.get('q') || '').slice(0, 150);
-    state.sort = ['reference', 'az', 'za'].includes(params.get('sort')) ? params.get('sort') : 'reference';
+    const sort = params.get('sort') || defaultSort;
+    state.sort = ['reference', 'az', 'za'].includes(sort) || metricSort(sort) ? sort : defaultSort;
   }
   function syncURL() {
     const params = new URLSearchParams({ model: state.model });
     if (state.kind !== 'all') params.set('kind', state.kind);
     if (state.query) params.set('q', state.query);
-    if (state.sort !== 'reference') params.set('sort', state.sort);
-    try { history.replaceState(null, '', `?${params}${['#about', '#leaderboard'].includes(location.hash) ? location.hash : ''}`); } catch { /* File previews may restrict history. Filters still work. */ }
+    if (state.sort !== defaultSort) params.set('sort', state.sort);
+    try { history.replaceState(null, '', `?${params}${['#about', '#leaderboard', '#submit'].includes(location.hash) ? location.hash : ''}`); } catch { /* File previews may restrict history. Filters still work. */ }
   }
+  function modelMethods() { return data.methods.filter((method) => !method.models || method.models.includes(state.model)); }
   function filteredMethods() {
-    return data.methods.filter((method) => (!method.models || method.models.includes(state.model)) &&
+    const sort = metricSort();
+    return modelMethods().filter((method) =>
       (state.kind === 'all' || state.kind === method.kind) &&
       `${methodName(method)} ${method.name}`.toLowerCase().includes(state.query.trim().toLowerCase())
     ).sort((a, b) => {
+      if (sort) {
+        const av = score(a, sort.column), bv = score(b, sort.column);
+        if (av === null && bv !== null) return 1;
+        if (bv === null && av !== null) return -1;
+        if (av !== null && bv !== null && av !== bv) return (av - bv) * (sort.direction === 'asc' ? 1 : -1);
+      }
       if (state.sort === 'reference' && a.kind !== b.kind) return a.kind === 'baseline' ? -1 : 1;
       if (state.sort === 'reference' && a.kind === 'baseline') return a.id === 'unsteered' ? -1 : 1;
       return methodName(a).localeCompare(methodName(b), 'en') * (state.sort === 'za' ? -1 : 1);
     });
   }
-  function updateSelection() {
-    $('#comparison-bar').hidden = selected.size === 0;
-    $('#selected-count').textContent = selected.size;
-    $('#compare-methods').disabled = selected.size < 2;
+  function ranks() {
+    const sort = metricSort();
+    if (!sort) return new Map();
+    const scored = modelMethods().map((method) => ({ id: method.id, value: score(method, sort.column) }))
+      .filter((item) => item.value !== null).sort((a, b) => b.value - a.value);
+    let rank = 0;
+    return new Map(scored.map((item, index) => {
+      if (!index || item.value !== scored[index - 1].value) rank = index + 1;
+      return [item.id, rank];
+    }));
+  }
+  function methodCell(method) {
+    return '<button class="method-link" data-method="' + method.id + '">' + escapeHTML(methodName(method)) + '</button>';
   }
   function render() {
     const methods = filteredMethods();
-    const visible = new Set(methods.map((method) => method.id));
-    for (const id of selected) if (!visible.has(id)) selected.delete(id);
+    const rankById = ranks();
+    const sort = metricSort();
     $('#model-filter').value = state.model;
+    $('#metric-sort-option').value = sort ? state.sort : defaultSort;
+    $('#metric-sort-option').textContent = sort ? sort.column.label + (sort.direction === 'desc' ? ' ↓' : ' ↑') : 'Success rate ↓';
     $('#sort-filter').value = state.sort;
     $('#method-search').value = state.query;
     document.querySelectorAll('[data-kind]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.kind === state.kind)));
     $('#results-head').innerHTML = tableHead();
     $('#results-body').innerHTML = methods.map((method) =>
-      '<tr class="' + (method.kind === 'baseline' ? 'baseline-row' : '') + '"><td class="select-column"><input type="checkbox" data-select="' + method.id + '" aria-label="Compare ' + escapeHTML(methodName(method)) + '" ' + (selected.has(method.id) ? 'checked' : '') + '></td><th scope="row" class="method-column"><button class="method-link" data-method="' + method.id + '">' + escapeHTML(methodName(method)) + '</button></th>' +
-      metricColumns.map((column) => '<td class="metric-value ' + (column.first ? 'group-start' : '') + '"><span aria-label="Not published">—</span></td>').join('') +
-      '<td class="group-start"><span class="status-label">Not published</span></td><td><button class="text-button" data-method="' + method.id + '" aria-label="Resources for ' + escapeHTML(methodName(method)) + '">Details</button></td></tr>'
+      '<tr data-method-row="' + method.id + '"><td class="rank-column">' + (rankById.get(method.id) || '<span aria-label="Not ranked">—</span>') + '</td><th scope="row" class="method-column">' + methodCell(method) + '</th>' +
+      metricColumns.map((column) => '<td class="metric-value ' + (column.first ? 'group-start' : '') + '">' + (score(method, column) === null ? '<span class="missing-score" aria-label="Not published">—</span>' : escapeHTML(score(method, column))) + '</td>').join('') +
+      '<td class="group-start"><span class="status-label">' + (metricColumns.some((column) => score(method, column) !== null) ? 'Available' : 'Not published') + '</span></td><td><button class="text-button" data-method="' + method.id + '" aria-label="Resources for ' + escapeHTML(methodName(method)) + '">Details</button></td></tr>'
     ).join('');
     $('#empty-state').hidden = methods.length !== 0;
     $('#metric-notes').innerHTML = metricGroups.map((group) =>
       '<section class="metric-note-group"><h3>' + escapeHTML(group.task.label + (group.track ? ' / ' + group.label : '')) + '</h3>' +
       group.metrics.map((metric, index) => '<p><strong>' + escapeHTML(metric) + '.</strong> ' + escapeHTML(group.notes[index]) + '</p>').join('') + '</section>'
     ).join('');
-    updateSelection();
     syncURL();
   }
   $('#model-filter').innerHTML = data.models.map((item) => `<option value="${item.id}">${item.name}</option>`).join('');
   readHash();
   render();
   function updateNavigation() {
-    const anchor = location.hash === '#leaderboard' ? '#leaderboard' : '#about';
+    const anchor = ['#leaderboard', '#submit'].includes(location.hash) ? location.hash : '#about';
     document.querySelectorAll('#site-nav a[href^="#"]').forEach((link) => {
       const active = link.getAttribute('href') === anchor;
       link.classList.toggle('active', active);
@@ -163,34 +191,25 @@ No files are uploaded and no evaluation is queued.</p></div><a class="button pri
   updateNavigation();
   window.addEventListener('hashchange', () => {
     updateNavigation();
-    if (['#about', '#leaderboard', ''].includes(location.hash)) return;
-    selected.clear(); readHash(); render();
+    if (['#about', '#leaderboard', '#submit', ''].includes(location.hash)) return;
+    readHash(); render();
   });
   [['#model-filter', 'model'], ['#sort-filter', 'sort']].forEach(([selector, key]) => {
-    $(selector).addEventListener('change', (event) => { state[key] = event.target.value; if (key !== 'sort') selected.clear(); render(); });
+    $(selector).addEventListener('change', (event) => { state[key] = event.target.value; render(); });
   });
   $('#method-search').addEventListener('input', (event) => { state.query = event.target.value.slice(0, 150); render(); });
   document.querySelectorAll('[data-kind]').forEach((button) => button.addEventListener('click', () => { state.kind = button.dataset.kind; render(); }));
   $('#clear-filters').addEventListener('click', () => { state.query = ''; state.kind = 'all'; render(); $('#method-search').focus(); });
-  $('#results-body').addEventListener('change', (event) => {
-    const input = event.target.closest('[data-select]');
-    if (!input) return;
-    if (input.checked && selected.size >= 3) { input.checked = false; toast('Select up to three methods at a time.'); return; }
-    if (input.checked) selected.add(input.dataset.select); else selected.delete(input.dataset.select);
-    updateSelection();
-  });
-  $('#clear-selection').addEventListener('click', () => { selected.clear(); render(); });
-  $('#compare-methods').addEventListener('click', () => {
-    const methods = [...selected].map((id) => data.methods.find((method) => method.id === id));
-    if (methods.length < 2) return;
-    const rows = metricGroups.map((group) =>
-      '<tr><th class="comparison-group" scope="rowgroup" colspan="' + (methods.length + 1) + '">' + escapeHTML(group.task.label + (group.track ? ' / ' + group.label : '')) + '</th></tr>' +
-      group.metrics.map((metric) => '<tr><th scope="row">' + escapeHTML(metric) + '</th>' + methods.map(() => '<td class="metric-value" aria-label="Not published">—</td>').join('') + '</tr>').join('')
-    ).join('');
-    openDialog('Compare methods', 'METHOD COMPARISON',
-      '<div class="dialog-meta"><span class="tag">' + escapeHTML(model().name) + '</span><span class="tag">All tasks</span></div><div class="table-scroll" tabindex="0" role="region" aria-label="Selected methods comparison"><table class="results-table"><caption class="sr-only">Comparison preview. No evaluation results are published.</caption><thead><tr><th scope="col">Metric</th>' +
-      methods.map((method) => '<th scope="col">' + escapeHTML(methodName(method)) + '</th>').join('') +
-      '</tr></thead><tbody>' + rows + '</tbody></table></div><p>Scores and configuration details will appear with published results. These entries are not ranked.</p>', true);
+  $('#results-head').addEventListener('click', (event) => {
+    const button = event.target.closest('[data-sort-metric]');
+    if (!button) return;
+    const sort = metricSort();
+    const id = button.dataset.sortMetric;
+    const direction = sort?.column.id === id && sort.direction === 'desc' ? 'asc' : 'desc';
+    state.sort = 'metric:' + id + ':' + direction;
+    render();
+    $('#results-head').querySelector('[data-sort-metric="' + id + '"]').focus({ preventScroll: true });
+    $('#sort-status').textContent = button.textContent.trim().replace(/[↑↓]/g, '') + ' sorted ' + (direction === 'desc' ? 'highest first.' : 'lowest first.');
   });
   $('#share-view').addEventListener('click', async () => {
     const link = location.href;
@@ -200,15 +219,24 @@ No files are uploaded and no evaluation is queued.</p></div><a class="button pri
       dialog.querySelector('input').select();
     }
   });
-  $('#export-csv').addEventListener('click', () => {
-    const rows = [['method', 'base_model', 'type', ...metricColumns.map((column) => column.exportLabel), 'result_status'], ...filteredMethods().map((method) => [methodName(method), model().name, method.kind, ...metricColumns.map(() => ''), 'not_published'])];
-    const csv = rows.map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(',')).join('\r\n');
-    const url = URL.createObjectURL(new Blob(['\uFEFF', csv], { type: 'text/csv;charset=utf-8;' }));
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `rcb-catalogue-${state.model}-all-tasks.csv`;
-    document.body.append(link); link.click(); link.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    toast('Catalogue exported. Unpublished scores are left empty.');
+  $('#submission-model').innerHTML = data.models.map((item) => `<option value="${item.name}">${item.name}</option>`).join('') + '<option value="Other">Other</option>';
+  $('#submission-form').addEventListener('submit', (event) => {
+    const name = $('#submission-name').value.trim();
+    if (!name) {
+      event.preventDefault();
+      $('#submission-name').setCustomValidity('Enter a method name.');
+      $('#submission-name').reportValidity();
+      return;
+    }
+    $('#submission-title').value = 'Method submission: ' + name;
+    $('#submission-body').value = [
+      '## Method', name,
+      '## Paper', $('#submission-paper').value.trim() || 'Not provided',
+      '## Code', $('#submission-code').value.trim(),
+      '## Base model', $('#submission-model').value,
+      '## Evaluation results', $('#submission-results').value.trim() || 'Not provided',
+      '## Evaluation settings and notes', $('#submission-notes').value.trim() || 'Not provided'
+    ].join('\n\n');
   });
+  $('#submission-name').addEventListener('input', () => $('#submission-name').setCustomValidity(''));
 })();

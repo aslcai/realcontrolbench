@@ -18,6 +18,9 @@ window.RCB = {
     { id: 'iti', name: 'ITI', kind: 'steering', description: 'An attention-head intervention evaluated in RealControlBench. Head selection and intervention strength are recorded in the task-specific configuration.' },
     { id: 'sae', name: 'SAE', kind: 'steering', models: ['gemma-2-9b'], description: 'The SAE experiments use Gemma Scope dictionaries on Gemma-2-9B-it. Published runs will identify the selected features, dictionary revision, and intervention settings.' }
   ],
+  // Published numeric scores keyed by model ID, method ID, and metric ID.
+  // Missing values stay unranked; example metric ID: instruction-following.success-rate.
+  results: {},
   tasks: [
     { id: 'instruction-following', short: 'Instruction following', label: 'Instruction following', number: '01',
       description: 'Follow a response constraint while still giving a coherent, adequate answer.',

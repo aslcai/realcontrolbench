@@ -7,10 +7,10 @@
   <meta name="theme-color" content="#ffffff">
   <title>RealControlBench</title>
   <link rel="icon" href="assets/mark.svg?v=79db890c1c" type="image/svg+xml">
-  <link rel="preload" href="assets/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=0f68807d19">
-  <script defer src="catalog.js"></script>
-  <script defer src="app.js?v=6786bc74b2"></script>
+  <link rel="preload" href="assets/fonts/ManropeVariable.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="styles.css?v=2ff89edbe5">
+  <script defer src="catalog.js?v=8c37b051fb"></script>
+  <script defer src="app.js?v=d0a5a2d1bf"></script>
 </head>
 <body data-page="leaderboard">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -24,7 +24,7 @@
         <a href="https://github.com/MingyuJ666/ControlBench" target="_blank" rel="noopener noreferrer">Code on GitHub</a>
       </div>
     </section>
-    <div class="board-heading" id="leaderboard"><h2>Leaderboard</h2><button class="button primary" data-dialog="submit">Submit a method</button></div>
+    <div class="board-heading" id="leaderboard"><h2>Leaderboard</h2></div>
     <p class="results-notice">Evaluation results are not yet published.</p>
     <section class="board-filters" aria-label="Evaluation settings">
       <label class="filter-field"><span>Base model</span><select id="model-filter"></select></label>
@@ -32,12 +32,27 @@
     </section>
     <section class="board-panel" aria-label="Methods and results">
       <div class="board-toolbar"><div class="segmented" role="group" aria-label="Method category"><button data-kind="all" aria-pressed="true">All methods</button><button data-kind="steering" aria-pressed="false">Steering</button><button data-kind="baseline" aria-pressed="false">Baselines</button></div><label class="search-field"><span aria-hidden="true">⌕</span><span class="sr-only">Search methods</span><input id="method-search" type="search" placeholder="Search methods…" autocomplete="off"></label></div>
-      <div class="table-meta"><div><label class="sort-label">Order <select id="sort-filter"><option value="reference">References first</option><option value="az">Method A–Z</option><option value="za">Method Z–A</option></select></label><button class="icon-button" id="share-view">Copy link <span aria-hidden="true">↗</span></button><button class="icon-button" id="export-csv">Download CSV <span aria-hidden="true">↓</span></button></div></div>
-      <div class="table-scroll dashboard-viewport" tabindex="0" role="region" aria-label="All tasks comparison table"><table class="results-table" id="leaderboard-table"><caption class="sr-only">Unranked method catalogue across all tasks and both tool-use tracks. All results are unpublished. Select up to three methods for a comparison preview.</caption><thead id="results-head"></thead><tbody id="results-body"></tbody></table></div>
+      <div class="table-meta"><div><label class="sort-label">Order <select id="sort-filter"><option id="metric-sort-option" value="metric:instruction-following.success-rate:desc">Success rate ↓</option><option value="reference">References first</option><option value="az">Method A–Z</option><option value="za">Method Z–A</option></select></label><button class="icon-button" id="share-view">Copy link <span aria-hidden="true">↗</span></button></div></div>
+      <div class="table-scroll dashboard-viewport" tabindex="0" role="region" aria-label="All tasks comparison table"><table class="results-table" id="leaderboard-table"><caption class="sr-only">Methods across all tasks. Click a metric to sort; click again to reverse. Ranks use the selected metric, with ties sharing a rank. Missing results are unranked and listed last.</caption><thead id="results-head"></thead><tbody id="results-body"></tbody></table></div>
       <div class="empty-state" id="empty-state" hidden><span aria-hidden="true">⌕</span><h3>No matching methods</h3><p>Try another method name or reset the catalogue filters.</p><button class="button secondary" id="clear-filters">Reset filters</button></div>
     </section>
-    <div class="comparison-bar" id="comparison-bar" hidden><p><strong id="selected-count">0</strong> methods selected <span>· up to 3</span></p><div><button class="text-button" id="clear-selection">Clear</button><button class="button primary small" id="compare-methods">Compare methods <span aria-hidden="true">→</span></button></div></div>
+    <p class="sr-only" id="sort-status" role="status" aria-live="polite"></p>
     <div class="board-notes"><details><summary>Metrics and evaluation details <span aria-hidden="true">+</span></summary><div id="metric-notes"></div><p>Compare methods within the same base model, task, and evaluation protocol. A missing result is not a zero.</p></details></div>
+    <section class="submission-panel" id="submit" aria-labelledby="submission-heading">
+      <div class="submission-heading"><h2 id="submission-heading">Submit a method</h2><p>Share your method, its paper, and reproducible evaluation results.</p></div>
+      <form id="submission-form" action="https://github.com/MingyuJ666/ControlBench/issues/new" method="get" target="_blank" rel="noopener noreferrer">
+        <input type="hidden" name="title" id="submission-title"><input type="hidden" name="body" id="submission-body">
+        <div class="submission-fields">
+          <label>Method name<input id="submission-name" type="text" maxlength="100" required placeholder="Name of your method" autocomplete="off"></label>
+          <label>Base model<select id="submission-model"></select></label>
+          <label>Paper URL (optional)<input id="submission-paper" type="url" pattern="https?://.*" maxlength="300" placeholder="https://arxiv.org/abs/…"></label>
+          <label>Code URL<input id="submission-code" type="url" pattern="https?://.*" maxlength="300" required placeholder="https://github.com/…"></label>
+          <label class="full-width">Results URL (optional)<input id="submission-results" type="url" pattern="https?://.*" maxlength="300" placeholder="Link to your evaluation results"></label>
+          <label class="full-width">Evaluation settings and notes (optional)<textarea id="submission-notes" rows="3" maxlength="1200" placeholder="Tasks, layers, steering strength, and how to reproduce your results"></textarea></label>
+        </div>
+        <div class="submission-actions"><p>Review and submit on GitHub. A GitHub account is required.</p><button class="button primary" type="submit">Continue on GitHub ↗</button></div>
+      </form>
+    </section>
   </main>
   <footer id="site-footer" class="site-footer container"></footer>
   <div id="dialog-root"></div><div class="toast" id="toast" role="status"></div>
