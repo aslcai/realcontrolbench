@@ -1,7 +1,7 @@
 @font-face{font-family:Inter;src:url("assets/fonts/InterVariable.woff2") format("woff2");font-style:normal;font-weight:100 900;font-display:swap}
 :root{font:16px Inter,Arial,sans-serif;color:#262626;--ink:#262626;--muted:#737373;--line:#e7e7e7;--sidebar-width:200px;font-optical-sizing:auto;font-feature-settings:"cv11","tnum"}
 *{box-sizing:border-box}
-body{margin:0;padding-left:var(--sidebar-width);background:#fafafa;color:var(--ink);line-height:1.5}
+body{margin:0;padding-left:var(--sidebar-width);background:#fff;color:var(--ink);line-height:1.5}
 button,input,select{font:inherit;color:inherit}
 button{border:0;background:none;cursor:pointer}
 button:disabled{opacity:.45;cursor:not-allowed}
