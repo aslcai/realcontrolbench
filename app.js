@@ -82,16 +82,13 @@ No files are uploaded and no evaluation is queued.</p></div><a class="button pri
       '<p>' + escapeHTML(method.description) + '</p><div class="dialog-message"><strong>Results not published in this preview.</strong><p>Authors, artifacts, intervention configuration, and per-task scores will be linked to an evaluated submission. No layer, strength, or score is implied by this catalogue entry.</p></div><div class="resource-list">' + taskLinks() + '</div>');
   }
   function tableHead() {
-    const groups = data.tasks.map((task) => {
-      const count = metricColumns.filter((column) => column.group.task.id === task.id).length;
-      return '<th scope="colgroup" class="task-group group-start" colspan="' + count + '">' + escapeHTML(task.label) + '</th>';
+    const groups = metricGroups.map((group) => {
+      const name = group.task.id === 'tool-use' ? 'Tool use' : group.task.short;
+      const track = group.track ? '<span class="track-label">' + escapeHTML(group.label) + '</span>' : '';
+      return '<th scope="colgroup" class="task-group" colspan="' + group.metrics.length + '"><span class="group-title">' + escapeHTML(name) + track + '</span></th>';
     }).join('');
-    const tracks = metricGroups.map((group) => {
-      if (group.task.id === 'tool-use') return '<th scope="colgroup" class="track-group group-start" colspan="' + group.metrics.length + '">' + escapeHTML(group.label) + '</th>';
-      return group.metrics.map((metric, index) => '<th scope="col" rowspan="2" class="metric-heading ' + (index === 0 ? 'group-start' : '') + '" title="' + escapeHTML(group.notes[index]) + '">' + escapeHTML(metric) + '</th>').join('');
-    }).join('');
-    const toolMetrics = metricColumns.filter((column) => column.group.task.id === 'tool-use').map((column) => '<th scope="col" class="metric-heading ' + (column.first ? 'group-start' : '') + '" title="' + escapeHTML(column.note) + '">' + escapeHTML(column.label) + '</th>').join('');
-    return '<tr><th scope="col" class="select-column" rowspan="3"><span class="sr-only">Select for comparison</span></th><th scope="col" class="method-column" rowspan="3">Method</th>' + groups + '<th scope="col" class="group-start" rowspan="3">Results</th><th scope="col" rowspan="3">Resources</th></tr><tr>' + tracks + '</tr><tr>' + toolMetrics + '</tr>';
+    const metrics = metricColumns.map((column) => '<th scope="col" class="metric-heading ' + (column.first ? 'group-start' : '') + '" title="' + escapeHTML(column.note) + '">' + escapeHTML(column.label) + '</th>').join('');
+    return '<tr><th scope="col" class="select-column" rowspan="2"><span class="sr-only">Select for comparison</span></th><th scope="col" class="method-column" rowspan="2">Method</th>' + groups + '<th scope="col" class="utility-heading" rowspan="2">Results</th><th scope="col" class="utility-heading" rowspan="2">Resources</th></tr><tr>' + metrics + '</tr>';
   }
   document.addEventListener('click', (event) => {
     const dialogButton = event.target.closest('[data-dialog]');

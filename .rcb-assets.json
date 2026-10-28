@@ -1,6 +1,8 @@
 [
   ".nojekyll",
   "app.js",
+  "assets/fonts/Inter-LICENSE.txt",
+  "assets/fonts/InterVariable.woff2",
   "assets/mark.svg",
   "catalog.js",
   "index.html",
