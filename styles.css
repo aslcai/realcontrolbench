@@ -7,3 +7,54 @@
 .board-notes{margin:22px 0 0}.board-notes details{font-size:14px;color:#6a7583}.board-notes summary{font-size:15px;font-weight:500;cursor:pointer;width:fit-content;color:#364b65;margin-bottom:9px}.board-notes summary>span{display:none}.board-notes p{margin-top:7px;line-height:1.7}.board-notes strong{font-weight:600}.notes-aside{display:none}.site-footer{display:flex;align-items:center;justify-content:space-between;gap:25px;margin-top:28px;padding:17px 0 23px;border-top:1px solid #dce1e7;font-size:14px;color:#8b95a2}.footer-links{display:flex;gap:20px}.footer-links a{color:#657b97}
 dialog{width:min(620px,calc(100% - 40px));max-height:85vh;overflow:auto;border:1px solid #a5b4c6;border-radius:4px;padding:28px;background:#fff;color:#293a4e}dialog::backdrop{background:#172b434d}.dialog-header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.eyebrow{font-size:14px;color:#8a96a5}.dialog-header h2{font-size:23px;font-weight:600;margin-top:7px}.dialog-close{font-size:24px;color:#7c8a9c;padding:0 4px}.dialog-content>p{font-size:15px;color:#65758a;margin-top:15px}.dialog-content>.button{margin-top:20px}.dialog-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:15px;padding-bottom:12px;border-bottom:1px solid #dce1e7;font-size:14px;color:#708197}.tag+.tag{border-left:1px solid #c3cdd9;padding-left:12px}.dialog-message{border-left:2px solid #bfcddd;padding:2px 0 2px 12px;margin-top:20px;font-size:14px}.dialog-message strong{font-weight:600}.dialog-message p{font-size:14px;margin-top:5px;color:#738197}.submission-options{margin-top:19px}.submission-option{border-top:1px solid #dce1e7;padding:14px 0}.submission-option>span{display:none}.submission-option h3{font-size:16px;font-weight:600}.submission-option p{font-size:14px;color:#728096;margin-top:5px}.resource-list{margin-top:20px}.resource-item{display:flex;justify-content:space-between;gap:20px;border-top:1px solid #dce1e7;padding:14px 0;font-size:15px}.resource-item>span{font-size:14px;color:#8a97a8}.dialog-compare{width:min(840px,calc(100% - 40px))}.dialog-compare .table-scroll{margin-top:19px}.share-input{width:100%;border:1px solid #bcc9d9;padding:9px;margin-top:14px;font-size:14px}.toast{position:fixed;bottom:23px;left:50%;transform:translateX(-50%);border:1px solid #b7c5d6;padding:10px 16px;background:#fff;color:#3c526e;font-size:14px;z-index:40;visibility:hidden}.toast.visible{visibility:visible}.toast:empty{display:none}body.dialog-open{overflow:hidden}
 @media(max-width:850px){.container{width:calc(100% - 36px)}.board-filters{flex-wrap:wrap}.filter-field{min-width:200px}.board-heading{align-items:flex-start}.board-toolbar,.table-meta,.table-bottom{flex-wrap:wrap}}
+
+/* All-task dashboard: a bounded viewport with frozen method columns and headers. */
+.board-filters>.filter-field:first-child{flex:0 1 340px}
+.table-scroll-hint{font-size:13px;color:#69727d;line-height:1.6;margin:0 0 10px}
+.dashboard-viewport{position:relative;width:100%;height:clamp(320px,60vh,520px);overflow:auto;border:1px solid #becbd9;scrollbar-gutter:stable;overscroll-behavior-x:contain;isolation:isolate}
+.dashboard-viewport:focus-visible{outline:2px solid #376caa;outline-offset:3px}
+#leaderboard-table{--select-width:42px;--method-width:210px;width:max-content;min-width:100%;border-collapse:separate;border-spacing:0;border:0}
+#leaderboard-table thead{position:sticky;top:0;z-index:4;background:#f0f4f9}
+#leaderboard-table thead th{height:40px;vertical-align:middle}
+#leaderboard-table .task-group{text-align:center;background:#e7eef7;color:#29486d;border-bottom:1px solid #b5c7dc}
+#leaderboard-table .track-group{text-align:center;background:#f0f4f9;font-size:13px}
+#leaderboard-table .metric-heading{min-width:168px;font-size:13px;font-weight:500}
+#leaderboard-table .group-start{border-left:1px solid #becbd9}
+#leaderboard-table .select-column{position:sticky;left:0;width:var(--select-width);min-width:var(--select-width);max-width:var(--select-width);padding:12px 0;text-align:center}
+#leaderboard-table .method-column{position:sticky;left:var(--select-width);width:var(--method-width);min-width:var(--method-width);max-width:var(--method-width);text-align:left;border-right:1px solid #aebed1;white-space:normal;overflow-wrap:anywhere}
+#leaderboard-table thead .select-column,#leaderboard-table thead .method-column{z-index:5;background:#e7eef7}
+#leaderboard-table tbody .select-column,#leaderboard-table tbody .method-column{z-index:2;background:#fff}
+#leaderboard-table tbody tr:nth-child(even)>.select-column,#leaderboard-table tbody tr:nth-child(even)>.method-column{background:#fafbfd}
+#leaderboard-table tbody tr:hover>.select-column,#leaderboard-table tbody tr:hover>.method-column{background:#f1f6fc}
+#leaderboard-table tbody th,#leaderboard-table tbody td{height:56px;padding-top:14px;padding-bottom:14px;vertical-align:middle}
+#leaderboard-table tbody .method-column{font-weight:400;font-size:15px;border-bottom:1px solid #e3e8ee}
+#leaderboard-table .method-kind{display:block;margin:2px 0 0;font-size:11px;line-height:14px}
+#leaderboard-table .method-kind:empty{display:none}
+.metric-note-group+.metric-note-group{margin-top:18px}
+.metric-note-group h3{font-size:14px;color:#364b65}
+.dialog-compare .comparison-group{text-align:left;background:#e7eef7}
+@media(max-width:600px){
+  :root{--sidebar-width:0px}
+  body{padding-left:0}
+  .site-header{position:static;width:auto;overflow:visible;border-right:0;border-bottom:1px solid var(--line)}
+  .header-inner{padding:10px 12px}
+  .site-nav{flex-direction:row;flex-wrap:wrap;gap:3px;font-size:12px}
+  .site-nav a,.site-nav button{padding:6px 8px;border-left:0}
+  .site-nav .active{border-bottom:2px solid var(--blue)}
+  .container{width:calc(100% - 24px)}
+  .project-intro h1{font-size:26px}
+  .project-intro>p{font-size:15px}
+  .project-links{flex-wrap:wrap;gap:10px 20px;font-size:14px}
+  .board-filters>.filter-field:first-child{flex:1}
+  .dashboard-viewport{height:clamp(300px,60vh,480px)}
+  #leaderboard-table{--select-width:32px;--method-width:135px}
+  #leaderboard-table .metric-heading{min-width:150px}
+  #leaderboard-table .method-column{padding-left:9px;padding-right:9px}
+  #leaderboard-table .method-link{font-size:13px}
+  .table-scroll-hint{font-size:12px}
+  .board-toolbar,.table-meta>div{flex-wrap:wrap}
+  .board-toolbar{gap:10px}
+  .table-meta>div{gap:12px}
+  .segmented{gap:16px}
+  .segmented button{font-size:14px}
+}
