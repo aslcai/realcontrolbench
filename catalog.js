@@ -34,6 +34,12 @@ window.RCB = {
       dataset: 'When2Call · BFCL v4', metrics: ['Single-turn decision ↑', 'Single-turn follow-up ↑'],
       metricIds: ['initial-success', 'follow-up-success'],
       metricNotes: ['Success of the initial call, clarify, or abstain decision, averaged equally across the three targets.', 'The initial decision and follow-up action both succeed for the same item, averaged equally across clarify and abstain targets. Configurations are selected independently for this metric.'],
-      tags: ['Decision-making', 'Stateful execution'], docs: 'tool-use' }
+      tags: ['Decision-making', 'Stateful execution'], docs: 'tool-use' },
+    { id: 'reasoning', short: 'Reasoning', label: 'Reasoning performance', number: '03',
+      description: 'Improve mathematical reasoning and test whether the gains transfer.',
+      detail: 'Configurations are selected on development data, then evaluated on held-out MATH500 and transfer benchmarks.',
+      dataset: 'MATH500 · AMC 2023 · AIME 2024', metrics: ['MATH500 accuracy ↑', 'AMC 2023 accuracy ↑', 'AIME 2024 accuracy ↑'],
+      metricNotes: ['Held-out MATH500 answer accuracy.', 'Transfer accuracy on AMC 2023.', 'Transfer accuracy on AIME 2024.'],
+      tags: ['Answer accuracy', 'Transfer'], docs: 'reasoning' }
   ]
 };
