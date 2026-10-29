@@ -14,5 +14,6 @@
   "index.html",
   "leaderboard.html",
   "results.js",
-  "styles.css"
+  "styles.css",
+  "submission.js"
 ]

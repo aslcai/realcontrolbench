@@ -7,7 +7,7 @@
   const defaultSort = 'metric:instruction-following.success-rate:desc';
   const state = { model: data.models[0].id, sort: defaultSort };
   let activeDialog = null;
-  $('#site-header').innerHTML = `<div class="header-inner container"><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a class="active" href="#about" aria-current="location">Home</a><a href="#leaderboard">Leaderboard</a><a href="#submit">Submit a Method</a><a href="${data.repository}#-getting-started" ${external}>Documentation</a><button data-dialog="resources">Paper &amp; Code</button></nav></div>`;
+  $('#site-header').innerHTML = `<div class="header-inner container"><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a class="active" href="#about" aria-current="location">Home</a><a href="#leaderboard">Leaderboard</a><a href="#submit">Submit a Method</a><button data-dialog="resources">Paper &amp; Code</button></nav></div>`;
   $('#site-footer').innerHTML = `<span>RealControlBench</span><div class="footer-links"><a href="${data.repository}" ${external}>Code</a><a href="${data.dataset}" ${external}>Dataset</a></div>`;
   function openDialog(title, eyebrow, content) {
     if (activeDialog) activeDialog.close();
@@ -36,7 +36,6 @@
   function showResources() {
     openDialog('Paper and code', 'PAPER & CODE', `<p>Evaluation code and data for RealControlBench.</p><div class="resource-list"><a class="resource-item" href="${data.repository}" ${external}>Code repository <span>GitHub</span></a><a class="resource-item" href="${data.dataset}" ${external}>Benchmark dataset <span>Hugging Face</span></a><a class="resource-item" href="${data.paper}" ${external}>Research paper <span>arXiv ↗</span></a></div>`);
   }
-  function model() { return data.models.find((item) => item.id === state.model); }
   const metricGroups = data.tasks.flatMap((task) => {
     const group = { task, track: '', label: task.label, metrics: task.metrics, ids: task.metricIds, notes: task.metricNotes };
     if (task.id !== 'tool-use') return [group];
@@ -44,12 +43,10 @@
       { ...group, track: 'single', label: 'Single-turn & follow-up' },
       {
         task, track: 'multi', label: 'Multi-turn execution',
-        metrics: ['Multi-turn joint success ↑', 'Multi-turn BFCL ↑', 'Decision accuracy ↑'],
-        ids: ['combined-accuracy', 'bfcl-accuracy', 'decision-accuracy'],
+        metrics: ['Multi-turn BFCL ↑'],
+        ids: ['bfcl-accuracy'],
         notes: [
-          'BFCL execution checks combined with semantic decision checks, averaged equally across call, clarify and abstain targets. This metric is distinct from Multi-turn BFCL and is optimized independently.',
-          'BFCL execution and irrelevance checks, averaged equally across call, clarify and abstain targets. This is the multi-turn metric used in the paper main table.',
-          'Semantic decision accuracy for conversations with a required judgment.'
+          'BFCL execution and irrelevance checks, averaged equally across call, clarify and abstain targets. This is the multi-turn metric used in the paper main table.'
         ]
       }
     ];
@@ -67,17 +64,7 @@
     const value = data.results?.[state.model]?.[method.id]?.[column.id];
     return typeof value === 'number' && Number.isFinite(value) ? value : null;
   }
-  function methodName(method) { return method.id === 'prompted' ? 'Prompted / CoT' : method.name; }
-  function taskLinks() {
-    return data.tasks.map((task) => '<a class="resource-item" href="' + data.repository + '/tree/main/' + task.docs + '" ' + external + '>' + escapeHTML(task.label) + ' <span>Task code</span></a>').join('');
-  }
-  function showMethod(id) {
-    const method = data.methods.find((item) => item.id === id);
-    if (!method) return;
-    openDialog(methodName(method), 'METHOD PROFILE',
-      '<div class="dialog-meta"><span class="tag">' + (method.kind === 'baseline' ? 'Reference baseline' : 'Steering method') + '</span><span class="tag">' + escapeHTML(model().name) + '</span><span class="tag">All tasks</span></div>' +
-      '<p>' + escapeHTML(method.description) + '</p><div class="resource-list">' + taskLinks() + '</div>');
-  }
+  function methodName(method) { return method.name; }
   function tableHead() {
     const groups = data.tasks.map((task) => {
       const count = metricGroups.filter((group) => group.task.id === task.id).reduce((sum, group) => sum + group.metrics.length, 0);
@@ -90,13 +77,11 @@
       const next = direction === 'desc' ? 'ascending' : 'descending';
       return '<th scope="col" class="metric-heading ' + (column.first ? 'group-start' : '') + '"' + (active ? ' aria-sort="' + (direction === 'desc' ? 'descending' : 'ascending') + '"' : '') + '><button class="metric-sort" data-sort-metric="' + column.id + '" title="' + escapeHTML(column.note) + ' Higher is better. Click to sort ' + next + '." aria-label="' + escapeHTML(column.label) + ': sort ' + next + '">' + escapeHTML(column.label) + '<span aria-hidden="true">' + (direction === 'desc' ? '↓' : '↑') + '</span></button></th>';
     }).join('');
-    return '<tr><th scope="col" class="rank-column" rowspan="2">Rank</th><th scope="col" class="method-column" rowspan="2">Method</th>' + groups + '<th scope="col" class="utility-heading" rowspan="2">Results</th><th scope="col" class="utility-heading" rowspan="2">Resources</th></tr><tr>' + metrics + '</tr>';
+    return '<tr><th scope="col" class="rank-column" rowspan="2">Rank</th><th scope="col" class="method-column" rowspan="2">Method</th>' + groups + '</tr><tr>' + metrics + '</tr>';
   }
   document.addEventListener('click', (event) => {
     const dialogButton = event.target.closest('[data-dialog]');
     if (dialogButton) ({ resources: showResources })[dialogButton.dataset.dialog]?.();
-    const methodButton = event.target.closest('[data-method]');
-    if (methodButton) showMethod(methodButton.dataset.method);
   });
   function readHash() {
     const params = new URLSearchParams(location.search || (location.hash.includes('=') ? location.hash.slice(1) : ''));
@@ -146,8 +131,7 @@
     $('#results-head').innerHTML = tableHead();
     $('#results-body').innerHTML = methods.map((method) =>
       '<tr data-method-row="' + method.id + '"><td class="rank-column">' + (rankById.get(method.id) || '<span aria-label="Not ranked">—</span>') + '</td><th scope="row" class="method-column">' + methodCell(method) + '</th>' +
-      metricColumns.map((column) => '<td class="metric-value ' + (column.first ? 'group-start' : '') + '" data-metric="' + column.id + '">' + (score(method, column) === null ? '<span class="missing-score" aria-label="Result unavailable">—</span>' : score(method, column).toFixed(2) + '%') + '</td>').join('') +
-      '<td class="group-start"><span class="status-label">' + (metricColumns.some((column) => score(method, column) !== null) ? 'Available' : 'Not published') + '</span></td><td><button class="text-button" data-method="' + method.id + '" aria-label="Resources for ' + escapeHTML(methodName(method)) + '">Details</button></td></tr>'
+      metricColumns.map((column) => '<td class="metric-value ' + (column.first ? 'group-start' : '') + '" data-metric="' + column.id + '">' + (score(method, column) === null ? '<span class="missing-score" aria-label="Result unavailable">—</span>' : score(method, column).toFixed(2) + '%') + '</td>').join('') + '</tr>'
     ).join('');
     $('#empty-state').hidden = methods.length !== 0;
     $('#metric-notes').innerHTML = '<p><strong>Scoring and selection.</strong> Scores are percentages. ' + escapeHTML(data.resultSelection) + ' Each column may use different configurations. Missing results are shown as —.</p>' + metricGroups.map((group) =>
