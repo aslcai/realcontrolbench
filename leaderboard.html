@@ -8,9 +8,10 @@
   <title>RealControlBench</title>
   <link rel="icon" href="assets/mark.svg?v=79db890c1c" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/ManropeVariable.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=4a4c30f209">
-  <script defer src="catalog.js?v=8c37b051fb"></script>
-  <script defer src="app.js?v=d30b0af0e5"></script>
+  <link rel="stylesheet" href="styles.css?v=b00a56996a">
+  <script defer src="results.js?v=824cde9b16"></script>
+  <script defer src="catalog.js?v=31e74c99d6"></script>
+  <script defer src="app.js?v=a022da3d6b"></script>
 </head>
 <body data-page="leaderboard">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -35,20 +36,20 @@
     <p class="sr-only" id="sort-status" role="status" aria-live="polite"></p>
     <div class="board-notes"><details><summary>Metrics and evaluation details <span aria-hidden="true">+</span></summary><div id="metric-notes"></div><p>Compare methods within the same base model, task, and evaluation protocol. A missing result is not a zero.</p></details></div>
     <section class="submission-panel" id="submit" aria-labelledby="submission-heading">
-      <div class="submission-heading"><h2 id="submission-heading">Submit a method</h2><p>Submit your evaluation results, logs, and trajectories for review.</p></div>
+      <div class="submission-heading"><h2 id="submission-heading">Submit a method</h2><p>Submit your method and configuration. We run the benchmark and publish the evaluated results.</p></div>
       <ol class="submission-steps">
-        <li><span class="submission-step-number" aria-hidden="true">01</span><h3>Run the benchmark</h3><p>Save your results, evaluation logs, full trajectories, and run configuration.</p></li>
-        <li><span class="submission-step-number" aria-hidden="true">02</span><h3>Prepare your submission</h3><p>Use the repository template. Include artifact links and instructions to reproduce your results.</p></li>
-        <li><span class="submission-step-number" aria-hidden="true">03</span><h3>Open a pull request</h3><p>Add your submission to your fork. We check the files and review the results before listing your method.</p></li>
+        <li><span class="submission-step-number" aria-hidden="true">01</span><h3>Prepare your method</h3><p>Provide runnable method code, the base model, target tasks, and configuration. Include any required steering vectors or other artifacts.</p></li>
+        <li><span class="submission-step-number" aria-hidden="true">02</span><h3>Submit a pull request</h3><p>Fork the benchmark repository and add your method. Include installation instructions, a run command, and your contact information in the PR.</p></li>
+        <li><span class="submission-step-number" aria-hidden="true">03</span><h3>We run the evaluation</h3><p>We review the implementation, run the benchmark, and add the evaluated results to the leaderboard.</p></li>
       </ol>
       <div class="submission-actions">
-        <a class="submission-guide" href="https://github.com/MingyuJ666/ControlBench/blob/main/submissions/README.md" target="_blank" rel="noopener noreferrer">Submission guide &amp; template ↗</a>
-        <a class="button primary" href="https://github.com/MingyuJ666/ControlBench/compare?expand=1&amp;template=leaderboard_submission.md" target="_blank" rel="noopener noreferrer">Submit via pull request ↗</a>
+        <p class="submission-note">You do not need to submit evaluation results or logs.</p>
+        <a class="button primary" href="https://github.com/MingyuJ666/ControlBench/compare?expand=1" target="_blank" rel="noopener noreferrer">Submit via pull request ↗</a>
       </div>
     </section>
   </main>
   <footer id="site-footer" class="site-footer container"></footer>
   <div id="dialog-root"></div>
-  <noscript><p class="container">Enable JavaScript to use the filters. No evaluation scores are published in this design preview. <a href="https://github.com/MingyuJ666/ControlBench">Read the benchmark documentation</a>.</p></noscript>
+  <noscript><p class="container">Enable JavaScript to view the leaderboard and sort results. <a href="https://github.com/MingyuJ666/ControlBench">Read the benchmark documentation</a>.</p></noscript>
 </body>
 </html>

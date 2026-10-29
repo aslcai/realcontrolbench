@@ -1,7 +1,7 @@
-/* Content comes from ../ControlBench/README.md and the domain guides.
-   This is a method catalogue, not an evaluation-results fixture. */
+/* Task definitions and method descriptions for the supplied evaluation results. */
 window.RCB = {
   repository: 'https://github.com/MingyuJ666/ControlBench',
+  paper: 'https://arxiv.org/abs/2610.27295',
   dataset: 'https://huggingface.co/datasets/Mingyu111/controlbench',
   models: [
     { id: 'qwen3-8b', name: 'Qwen3-8B' },
@@ -9,18 +9,18 @@ window.RCB = {
     { id: 'gemma-2-9b', name: 'Gemma-2-9B-it' }
   ],
   methods: [
-    { id: 'unsteered', name: 'Unsteered', kind: 'baseline', description: 'The reference model without an activation intervention. Published results will provide the comparison point for steering methods.' },
+    { id: 'unsteered', name: 'Unsteered', kind: 'baseline', description: 'The reference model without an activation intervention.' },
     { id: 'prompted', name: 'Prompted', kind: 'baseline', description: 'A prompting baseline. The reasoning track uses a chain-of-thought baseline; prompting instructions depend on the evaluation domain.' },
-    { id: 'caa', name: 'CAA', kind: 'steering', description: 'One of the six activation-steering methods included in RealControlBench. Intervention settings and evaluated artifacts will accompany each published run.' },
-    { id: 'pca', name: 'PCA', kind: 'steering', description: 'One of the six activation-steering methods included in RealControlBench. Layer and steering-strength settings will accompany each published run.' },
-    { id: 'lat', name: 'LAT', kind: 'steering', description: 'One of the six activation-steering methods included in RealControlBench. Its results will be reported alongside the unsteered and prompted references.' },
-    { id: 'linear-probe', name: 'Linear Probe', kind: 'steering', description: 'One of the six activation-steering methods included in RealControlBench. The method profile will link the evaluated configuration and reproducibility information.' },
+    { id: 'caa', name: 'CAA', kind: 'steering', description: 'One of the six activation-steering methods evaluated in RealControlBench.' },
+    { id: 'pca', name: 'PCA', kind: 'steering', description: 'One of the six activation-steering methods evaluated in RealControlBench.' },
+    { id: 'lat', name: 'LAT', kind: 'steering', description: 'One of the six activation-steering methods evaluated in RealControlBench.' },
+    { id: 'linear-probe', name: 'Linear Probe', kind: 'steering', description: 'One of the six activation-steering methods evaluated in RealControlBench.' },
     { id: 'iti', name: 'ITI', kind: 'steering', description: 'An attention-head intervention evaluated in RealControlBench. Head selection and intervention strength are recorded in the task-specific configuration.' },
-    { id: 'sae', name: 'SAE', kind: 'steering', models: ['gemma-2-9b'], description: 'The SAE experiments use Gemma Scope dictionaries on Gemma-2-9B-it. Published runs will identify the selected features, dictionary revision, and intervention settings.' }
+    { id: 'sae', name: 'SAE', kind: 'steering', models: ['gemma-2-9b'], description: 'The SAE experiments use Gemma Scope dictionaries on Gemma-2-9B-it.' }
   ],
-  // Published numeric scores keyed by model ID, method ID, and metric ID.
-  // Missing values stay unranked; example metric ID: instruction-following.success-rate.
-  results: {},
+  // Values are already percentages. Missing metrics remain unranked.
+  results: window.RCB_RESULTS.scores,
+  resultSelection: window.RCB_RESULTS.selection,
   tasks: [
     { id: 'instruction-following', short: 'Instruction following', label: 'Instruction following', number: '01',
       description: 'Follow a response constraint while still giving a coherent, adequate answer.',
@@ -31,8 +31,9 @@ window.RCB = {
     { id: 'tool-use', short: 'Agentic tool use', label: 'Agentic tool use', number: '02',
       description: 'Call, clarify, or abstain — then carry the decision through execution.',
       detail: 'Single-turn decisions and follow-ups use When2Call; multi-turn execution uses stateful BFCL v4 conversations.',
-      dataset: 'When2Call · BFCL v4', metrics: ['Initial success ↑', 'Follow-up success ↑'],
-      metricNotes: ['Success of the initial call, clarify, or abstain decision.', 'Success after the missing arguments or tools are supplied.'],
+      dataset: 'When2Call · BFCL v4', metrics: ['Single-turn decision ↑', 'Single-turn follow-up ↑'],
+      metricIds: ['initial-success', 'follow-up-success'],
+      metricNotes: ['Success of the initial call, clarify, or abstain decision, averaged equally across the three targets.', 'The initial decision and follow-up action both succeed for the same item, averaged equally across clarify and abstain targets. Configurations are selected independently for this metric.'],
       tags: ['Decision-making', 'Stateful execution'], docs: 'tool-use' },
     { id: 'reasoning', short: 'Reasoning', label: 'Reasoning performance', number: '03',
       description: 'Improve mathematical reasoning and test whether the gains transfer.',

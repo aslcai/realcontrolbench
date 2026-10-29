@@ -1,0 +1,21 @@
+{
+  "paper": {
+    "document": "ControlBenchICLR (12).pdf",
+    "sha256": "fd766841ed50e453d9f95376fc7758be4aaeb6a02089c67b9473c0da8fa53451",
+    "table": 6,
+    "page": 12,
+    "type": "paper_reported",
+    "note": "Extracted directly from the supplied PDF; not a newly executed evaluation."
+  },
+  "sources": [
+    "amarel_existing",
+    "ilab_20261028",
+    "release_controlbench-tool-use-single-turn-200-v1.tar.gz",
+    "release_results_gemma-2-9b-it.tgz",
+    "release_results_llama-3.1-8b-instruct.tgz",
+    "release_results_qwen3-8b.tgz",
+    "snapshot_20261021_controlbench-pool-b",
+    "snapshot_20261021_controlbench-sae"
+  ],
+  "note": "Portable source IDs and content hashes are included; server login details and absolute filesystem paths are omitted."
+}

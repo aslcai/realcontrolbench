@@ -1,0 +1,460 @@
+{
+  "schema_version": 2,
+  "generated_at": "2026-10-29T02:11:33.884037+00:00",
+  "unit": "percent",
+  "scope": [
+    "instruction-following",
+    "tool-use-single-turn",
+    "tool-use-multi-turn"
+  ],
+  "metric_order": [
+    "if_avg",
+    "tool_decision",
+    "tool_followup",
+    "tool_multi"
+  ],
+  "selection": "Independently maximize each metric for each model/method/target on the evaluated standard grid, then take the unweighted target mean. Selection is on the evaluation set.",
+  "tie_break": "Lower strength, then lower zero-based layer, then configuration ID.",
+  "records": [
+    {
+      "model": "qwen3-8b",
+      "method": "unsteered",
+      "scores": {
+        "if_avg": 3.2,
+        "tool_decision": 32.0,
+        "tool_followup": 13.0,
+        "tool_multi": 8.3333333333
+      },
+      "additional_scores": {
+        "tool_multi_joint": 7.3333333333
+      },
+      "paper_scores": {
+        "if_avg": 3.2,
+        "tool_decision": 32.0,
+        "tool_followup": 13.0,
+        "tool_multi": 8.33
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "qwen3-8b",
+      "method": "prompted",
+      "scores": {
+        "if_avg": 95.6,
+        "tool_decision": 40.5,
+        "tool_followup": 24.5,
+        "tool_multi": 9.5
+      },
+      "additional_scores": {
+        "tool_multi_joint": 8.8333333333
+      },
+      "paper_scores": {
+        "if_avg": 95.6,
+        "tool_decision": 40.5,
+        "tool_followup": 24.5,
+        "tool_multi": 9.5
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "qwen3-8b",
+      "method": "caa",
+      "scores": {
+        "if_avg": 38.0,
+        "tool_decision": 41.3333333333,
+        "tool_followup": 18.25,
+        "tool_multi": 10.0
+      },
+      "additional_scores": {
+        "tool_multi_joint": 8.5
+      },
+      "paper_scores": {
+        "if_avg": 38.0,
+        "tool_decision": 41.33,
+        "tool_followup": 18.25,
+        "tool_multi": 10.0
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "qwen3-8b",
+      "method": "pca",
+      "scores": {
+        "if_avg": 38.2,
+        "tool_decision": 42.0,
+        "tool_followup": 16.25,
+        "tool_multi": 9.5
+      },
+      "additional_scores": {
+        "tool_multi_joint": 8.3333333333
+      },
+      "paper_scores": {
+        "if_avg": 38.2,
+        "tool_decision": 42.0,
+        "tool_followup": 16.25,
+        "tool_multi": 9.5
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "qwen3-8b",
+      "method": "lat",
+      "scores": {
+        "if_avg": 38.0,
+        "tool_decision": 40.3333333333,
+        "tool_followup": 18.0,
+        "tool_multi": 10.5
+      },
+      "additional_scores": {
+        "tool_multi_joint": 8.8333333333
+      },
+      "paper_scores": {
+        "if_avg": 38.0,
+        "tool_decision": 40.33,
+        "tool_followup": 18.0,
+        "tool_multi": 10.5
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "qwen3-8b",
+      "method": "linear-probe",
+      "scores": {
+        "if_avg": 39.3,
+        "tool_decision": 41.0,
+        "tool_followup": 17.5,
+        "tool_multi": 9.8333333333
+      },
+      "additional_scores": {
+        "tool_multi_joint": 8.8333333333
+      },
+      "paper_scores": {
+        "if_avg": 39.3,
+        "tool_decision": 41.0,
+        "tool_followup": 17.5,
+        "tool_multi": 9.83
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "qwen3-8b",
+      "method": "iti",
+      "scores": {
+        "if_avg": 3.2,
+        "tool_decision": 32.8333333333,
+        "tool_followup": 14.25,
+        "tool_multi": 8.1666666667
+      },
+      "additional_scores": {
+        "tool_multi_joint": 7.3333333333
+      },
+      "paper_scores": {
+        "if_avg": 3.2,
+        "tool_decision": 32.83,
+        "tool_followup": 14.25,
+        "tool_multi": 8.17
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "llama-3.1-8b",
+      "method": "unsteered",
+      "scores": {
+        "if_avg": 0.5,
+        "tool_decision": 25.6666666667,
+        "tool_followup": 2.0,
+        "tool_multi": 3.0
+      },
+      "additional_scores": {
+        "tool_multi_joint": 2.1666666667
+      },
+      "paper_scores": {
+        "if_avg": 0.5,
+        "tool_decision": 25.67,
+        "tool_followup": 2.0,
+        "tool_multi": 3.0
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "llama-3.1-8b",
+      "method": "prompted",
+      "scores": {
+        "if_avg": 90.9,
+        "tool_decision": 41.0,
+        "tool_followup": 20.75,
+        "tool_multi": 4.6666666667
+      },
+      "additional_scores": {
+        "tool_multi_joint": 4.1666666667
+      },
+      "paper_scores": {
+        "if_avg": 90.9,
+        "tool_decision": 41.0,
+        "tool_followup": 20.75,
+        "tool_multi": 4.67
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "llama-3.1-8b",
+      "method": "caa",
+      "scores": {
+        "if_avg": 26.4,
+        "tool_decision": 25.8333333333,
+        "tool_followup": 2.25,
+        "tool_multi": 6.3333333333
+      },
+      "additional_scores": {
+        "tool_multi_joint": 5.3333333333
+      },
+      "paper_scores": {
+        "if_avg": 26.4,
+        "tool_decision": 25.83,
+        "tool_followup": 2.25,
+        "tool_multi": 6.33
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "llama-3.1-8b",
+      "method": "pca",
+      "scores": {
+        "if_avg": 26.0,
+        "tool_decision": 29.1666666667,
+        "tool_followup": 4.0,
+        "tool_multi": 5.6666666667
+      },
+      "additional_scores": {
+        "tool_multi_joint": 4.3333333333
+      },
+      "paper_scores": {
+        "if_avg": 26.0,
+        "tool_decision": 29.17,
+        "tool_followup": 4.0,
+        "tool_multi": 5.67
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "llama-3.1-8b",
+      "method": "lat",
+      "scores": {
+        "if_avg": 25.9,
+        "tool_decision": 26.3333333333,
+        "tool_followup": 2.0,
+        "tool_multi": 5.5
+      },
+      "additional_scores": {
+        "tool_multi_joint": 4.5
+      },
+      "paper_scores": {
+        "if_avg": 25.9,
+        "tool_decision": 26.33,
+        "tool_followup": 2.0,
+        "tool_multi": 5.5
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "llama-3.1-8b",
+      "method": "linear-probe",
+      "scores": {
+        "if_avg": 28.0,
+        "tool_decision": 25.8333333333,
+        "tool_followup": 1.75,
+        "tool_multi": 7.0
+      },
+      "additional_scores": {
+        "tool_multi_joint": 5.8333333333
+      },
+      "paper_scores": {
+        "if_avg": 28.0,
+        "tool_decision": 25.83,
+        "tool_followup": 1.75,
+        "tool_multi": 7.0
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "llama-3.1-8b",
+      "method": "iti",
+      "scores": {
+        "if_avg": 1.4,
+        "tool_decision": 25.5,
+        "tool_followup": 2.25,
+        "tool_multi": 3.3333333333
+      },
+      "additional_scores": {
+        "tool_multi_joint": 2.3333333333
+      },
+      "paper_scores": {
+        "if_avg": 1.4,
+        "tool_decision": 25.5,
+        "tool_followup": 2.25,
+        "tool_multi": 3.33
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "gemma-2-9b",
+      "method": "unsteered",
+      "scores": {
+        "if_avg": 0.5,
+        "tool_decision": 38.6666666667,
+        "tool_followup": 20.5,
+        "tool_multi": 0.5
+      },
+      "additional_scores": {
+        "tool_multi_joint": 0.5
+      },
+      "paper_scores": {
+        "if_avg": 0.5,
+        "tool_decision": 38.67,
+        "tool_followup": 20.5,
+        "tool_multi": 0.5
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "gemma-2-9b",
+      "method": "prompted",
+      "scores": {
+        "if_avg": 89.9,
+        "tool_decision": 65.6666666667,
+        "tool_followup": 45.25,
+        "tool_multi": 1.0
+      },
+      "additional_scores": {
+        "tool_multi_joint": 1.0
+      },
+      "paper_scores": {
+        "if_avg": 89.9,
+        "tool_decision": 65.67,
+        "tool_followup": 45.25,
+        "tool_multi": 1.0
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "gemma-2-9b",
+      "method": "caa",
+      "scores": {
+        "if_avg": 33.4,
+        "tool_decision": 44.3333333333,
+        "tool_followup": 25.25,
+        "tool_multi": 1.1666666667
+      },
+      "additional_scores": {
+        "tool_multi_joint": 0.8333333333
+      },
+      "paper_scores": {
+        "if_avg": 33.4,
+        "tool_decision": 44.33,
+        "tool_followup": 25.25,
+        "tool_multi": 1.17
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "gemma-2-9b",
+      "method": "pca",
+      "scores": {
+        "if_avg": 33.1,
+        "tool_decision": 44.1666666667,
+        "tool_followup": 25.75,
+        "tool_multi": 1.0
+      },
+      "additional_scores": {
+        "tool_multi_joint": 0.6666666667
+      },
+      "paper_scores": {
+        "if_avg": 33.1,
+        "tool_decision": 44.17,
+        "tool_followup": 25.75,
+        "tool_multi": 1.0
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "gemma-2-9b",
+      "method": "lat",
+      "scores": {
+        "if_avg": 34.0,
+        "tool_decision": 44.8333333333,
+        "tool_followup": 26.5,
+        "tool_multi": 1.1666666667
+      },
+      "additional_scores": {
+        "tool_multi_joint": 1.1666666667
+      },
+      "paper_scores": {
+        "if_avg": 34.0,
+        "tool_decision": 44.83,
+        "tool_followup": 26.5,
+        "tool_multi": 1.17
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "gemma-2-9b",
+      "method": "linear-probe",
+      "scores": {
+        "if_avg": 30.3,
+        "tool_decision": 39.5,
+        "tool_followup": 21.25,
+        "tool_multi": 0.8333333333
+      },
+      "additional_scores": {
+        "tool_multi_joint": 0.6666666667
+      },
+      "paper_scores": {
+        "if_avg": 30.3,
+        "tool_decision": 39.5,
+        "tool_followup": 21.25,
+        "tool_multi": 0.83
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "gemma-2-9b",
+      "method": "sae",
+      "scores": {
+        "if_avg": 19.2,
+        "tool_decision": 46.3333333333,
+        "tool_followup": 24.0,
+        "tool_multi": 1.1666666667
+      },
+      "additional_scores": {
+        "tool_multi_joint": 1.0
+      },
+      "paper_scores": {
+        "if_avg": 19.2,
+        "tool_decision": 46.33,
+        "tool_followup": 24.0,
+        "tool_multi": 1.17
+      },
+      "source_type": "recomputed_from_verified_scores"
+    },
+    {
+      "model": "gemma-2-9b",
+      "method": "iti",
+      "scores": {
+        "if_avg": 0.5,
+        "tool_decision": 44.8333333333,
+        "tool_followup": 21.25,
+        "tool_multi": 0.6666666667
+      },
+      "additional_scores": {
+        "tool_multi_joint": 0.6666666667
+      },
+      "paper_scores": {
+        "if_avg": 0.5,
+        "tool_decision": 44.83,
+        "tool_followup": 21.25,
+        "tool_multi": 0.67
+      },
+      "source_type": "recomputed_from_verified_scores"
+    }
+  ]
+}

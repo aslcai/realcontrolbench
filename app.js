@@ -8,7 +8,7 @@
   const state = { model: data.models[0].id, sort: defaultSort };
   let activeDialog = null;
   $('#site-header').innerHTML = `<div class="header-inner container"><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a class="active" href="#about" aria-current="location">Home</a><a href="#leaderboard">Leaderboard</a><a href="#submit">Submit a Method</a><a href="${data.repository}#-getting-started" ${external}>Documentation</a><button data-dialog="resources">Paper &amp; Code</button></nav></div>`;
-  $('#site-footer').innerHTML = `<span>RealControlBench · Development preview</span><div class="footer-links"><a href="${data.repository}" ${external}>Code</a><a href="${data.dataset}" ${external}>Dataset</a></div>`;
+  $('#site-footer').innerHTML = `<span>RealControlBench</span><div class="footer-links"><a href="${data.repository}" ${external}>Code</a><a href="${data.dataset}" ${external}>Dataset</a></div>`;
   function openDialog(title, eyebrow, content) {
     if (activeDialog) activeDialog.close();
     const returnFocus = document.activeElement;
@@ -34,27 +34,28 @@
     return dialog;
   }
   function showResources() {
-    openDialog('Paper and code', 'PAPER & CODE', `<p>Evaluation code, data, and task documentation for RealControlBench.</p><div class="resource-list"><a class="resource-item" href="${data.repository}" ${external}>Code repository <span>GitHub</span></a><a class="resource-item" href="${data.dataset}" ${external}>Benchmark dataset <span>Hugging Face</span></a><a class="resource-item" href="${data.repository}#-getting-started" ${external}>Evaluation documentation <span>Getting started</span></a><div class="resource-item">Research paper <span>Link forthcoming</span></div></div>`);
+    openDialog('Paper and code', 'PAPER & CODE', `<p>Evaluation code and data for RealControlBench.</p><div class="resource-list"><a class="resource-item" href="${data.repository}" ${external}>Code repository <span>GitHub</span></a><a class="resource-item" href="${data.dataset}" ${external}>Benchmark dataset <span>Hugging Face</span></a><a class="resource-item" href="${data.paper}" ${external}>Research paper <span>arXiv ↗</span></a></div>`);
   }
   function model() { return data.models.find((item) => item.id === state.model); }
   const metricGroups = data.tasks.flatMap((task) => {
-    const group = { task, track: '', label: task.label, metrics: task.metrics, notes: task.metricNotes };
+    const group = { task, track: '', label: task.label, metrics: task.metrics, ids: task.metricIds, notes: task.metricNotes };
     if (task.id !== 'tool-use') return [group];
     return [
       { ...group, track: 'single', label: 'Single-turn & follow-up' },
       {
         task, track: 'multi', label: 'Multi-turn execution',
-        metrics: ['Combined accuracy ↑', 'BFCL accuracy ↑', 'Decision accuracy ↑'],
+        metrics: ['Multi-turn joint success ↑', 'Multi-turn BFCL ↑', 'Decision accuracy ↑'],
+        ids: ['combined-accuracy', 'bfcl-accuracy', 'decision-accuracy'],
         notes: [
-          'Combined execution checks and the required clarification or abstention behavior.',
-          'BFCL execution and no-call checks.',
+          'BFCL execution checks combined with semantic decision checks, averaged equally across call, clarify and abstain targets. This metric is distinct from Multi-turn BFCL and is optimized independently.',
+          'BFCL execution and irrelevance checks, averaged equally across call, clarify and abstain targets. This is the multi-turn metric used in the paper main table.',
           'Semantic decision accuracy for conversations with a required judgment.'
         ]
       }
     ];
   });
   const metricColumns = metricGroups.flatMap((group) => group.metrics.map((label, index) => ({
-    id: [group.task.id, group.track, label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-$/, '')].filter(Boolean).join('.'),
+    id: [group.task.id, group.track, group.ids?.[index] || label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-$/, '')].filter(Boolean).join('.'),
     label: label.replace(/\s*↑$/, ''), note: group.notes[index], first: index === 0
   })));
   function metricSort(value = state.sort) {
@@ -73,7 +74,7 @@
   function showMethod(id) {
     const method = data.methods.find((item) => item.id === id);
     if (!method) return;
-    openDialog(methodName(method), 'METHOD PROFILE / PREVIEW',
+    openDialog(methodName(method), 'METHOD PROFILE',
       '<div class="dialog-meta"><span class="tag">' + (method.kind === 'baseline' ? 'Reference baseline' : 'Steering method') + '</span><span class="tag">' + escapeHTML(model().name) + '</span><span class="tag">All tasks</span></div>' +
       '<p>' + escapeHTML(method.description) + '</p><div class="resource-list">' + taskLinks() + '</div>');
   }
@@ -136,7 +137,7 @@
     }));
   }
   function methodCell(method) {
-    return '<button class="method-link" data-method="' + method.id + '">' + escapeHTML(methodName(method)) + '</button>';
+    return '<span class="method-name">' + escapeHTML(methodName(method)) + '</span>';
   }
   function render() {
     const methods = orderedMethods();
@@ -145,11 +146,11 @@
     $('#results-head').innerHTML = tableHead();
     $('#results-body').innerHTML = methods.map((method) =>
       '<tr data-method-row="' + method.id + '"><td class="rank-column">' + (rankById.get(method.id) || '<span aria-label="Not ranked">—</span>') + '</td><th scope="row" class="method-column">' + methodCell(method) + '</th>' +
-      metricColumns.map((column) => '<td class="metric-value ' + (column.first ? 'group-start' : '') + '">' + (score(method, column) === null ? '<span class="missing-score" aria-label="Not published">—</span>' : escapeHTML(score(method, column))) + '</td>').join('') +
+      metricColumns.map((column) => '<td class="metric-value ' + (column.first ? 'group-start' : '') + '" data-metric="' + column.id + '">' + (score(method, column) === null ? '<span class="missing-score" aria-label="Result unavailable">—</span>' : score(method, column).toFixed(2) + '%') + '</td>').join('') +
       '<td class="group-start"><span class="status-label">' + (metricColumns.some((column) => score(method, column) !== null) ? 'Available' : 'Not published') + '</span></td><td><button class="text-button" data-method="' + method.id + '" aria-label="Resources for ' + escapeHTML(methodName(method)) + '">Details</button></td></tr>'
     ).join('');
     $('#empty-state').hidden = methods.length !== 0;
-    $('#metric-notes').innerHTML = metricGroups.map((group) =>
+    $('#metric-notes').innerHTML = '<p><strong>Scoring and selection.</strong> Scores are percentages. ' + escapeHTML(data.resultSelection) + ' Each column may use different configurations. Missing results are shown as —.</p>' + metricGroups.map((group) =>
       '<section class="metric-note-group"><h3>' + escapeHTML(group.task.label + (group.track ? ' / ' + group.label : '')) + '</h3>' +
       group.metrics.map((metric, index) => '<p><strong>' + escapeHTML(metric) + '.</strong> ' + escapeHTML(group.notes[index]) + '</p>').join('') + '</section>'
     ).join('');

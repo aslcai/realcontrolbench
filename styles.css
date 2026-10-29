@@ -36,7 +36,7 @@ h1,h2,h3,p{margin:0}
 .button span[aria-hidden]{display:none}
 .board-filters{display:flex;align-items:center;justify-content:center;min-width:0;padding:22px 0}
 .model-switcher{position:relative;display:flex;gap:24px;width:100%;min-width:0;overflow-x:auto;padding:4px 0 8px;scrollbar-width:thin;scrollbar-color:#bcb9ce transparent}
-.model-switcher button{position:relative;flex:1 0 auto;padding:16px 20px 24px;font-size:22px;font-weight:550;line-height:32px;letter-spacing:-.5px;color:#74717e;white-space:nowrap;text-align:center;transition:color .16s}
+.model-switcher button{position:relative;flex:1 0 auto;padding:16px 20px 24px;font-size:18px;font-weight:550;line-height:28px;letter-spacing:-.5px;color:#74717e;white-space:nowrap;text-align:center;transition:color .16s}
 .model-switcher button::after{content:"";position:absolute;bottom:8px;left:50%;width:72px;height:3px;border-radius:2px;background:transparent;transform:translateX(-50%)}
 .model-switcher button:hover{color:#393044}
 .model-switcher button[aria-pressed=true]{color:var(--accent);font-weight:750}
@@ -55,8 +55,7 @@ h1,h2,h3,p{margin:0}
 .results-table td{padding:14px 18px;border-bottom:1px solid #e9e9ed;text-align:center}
 .results-table tbody tr:hover{background:#f7f7f7}
 .results-table .method-column{text-align:center;min-width:200px}
-.method-link{padding:0;font-size:17px;font-weight:750;color:#303030;line-height:24px;text-align:center}
-.method-link:hover{text-decoration:underline;text-underline-offset:4px}
+.method-name{font-size:17px;font-weight:750;color:#303030;line-height:24px;text-align:center}
 .metric-value{font:16px Manrope,Arial,sans-serif;font-variant-numeric:tabular-nums;color:#383838}
 .missing-score{color:#858585}
 .status-label{font-size:15px;color:#8a8a8a}
@@ -124,7 +123,7 @@ body.dialog-open{overflow:hidden}
 .submission-steps h3{font-size:18px;line-height:1.4;font-weight:700}
 .submission-steps p{margin-top:9px;font-size:16px;line-height:1.7;color:#666}
 .submission-actions{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}
-.submission-guide{font-size:16px;font-weight:650;color:var(--accent);text-decoration:underline;text-underline-offset:4px}
+.submission-note{font-size:16px;color:#666;line-height:1.7}
 .submission-actions .button{font-size:16px;font-weight:650;padding:12px 20px;white-space:normal;text-align:center}
 @media(max-width:1000px){
   .container{width:calc(100% - 40px)}
@@ -145,7 +144,7 @@ body.dialog-open{overflow:hidden}
   .project-intro>p{font-size:14px}
   .project-links{flex-wrap:wrap;gap:10px 20px;font-size:15px}
   .model-switcher{gap:12px}
-  .model-switcher button{font-size:19px;padding:12px 20px 22px;line-height:28px}
+  .model-switcher button{font-size:16px;padding:12px 20px 22px;line-height:24px}
   .board-heading h2{font-size:32px}
   .board-heading .button{padding:8px 11px;font-size:14px}
   .board-panel{border-radius:13px}
@@ -153,6 +152,6 @@ body.dialog-open{overflow:hidden}
   #leaderboard-table{--rank-width:58px;--method-width:160px}
   #leaderboard-table .metric-heading{min-width:150px}
   #leaderboard-table .method-column{padding-left:10px;padding-right:10px}
-  #leaderboard-table .method-link{font-size:16px}
+  #leaderboard-table .method-name{font-size:16px}
   .site-footer{align-items:flex-start;font-size:14px}
 }

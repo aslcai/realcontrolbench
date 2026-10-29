@@ -1,0 +1,88 @@
+{
+  "schema_version": 2,
+  "generated_at": "2026-10-29T02:11:33.884037+00:00",
+  "unit": "percent",
+  "scope": [
+    "instruction-following",
+    "tool-use-single-turn",
+    "tool-use-multi-turn"
+  ],
+  "metric_order": [
+    "if_avg",
+    "tool_decision",
+    "tool_followup",
+    "tool_multi"
+  ],
+  "selection": "Independently maximize each metric for each model/method/target on the evaluated standard grid, then take the unweighted target mean. Selection is on the evaluation set.",
+  "tie_break": "Lower strength, then lower zero-based layer, then configuration ID.",
+  "metric_definitions": {
+    "if_avg": {
+      "label": "Instruction following",
+      "source_field": "accuracy",
+      "targets": [
+        "lowercase",
+        "one_sentence",
+        "no_comma",
+        "question_ending",
+        "fixed_ending"
+      ],
+      "meaning": "Rule satisfaction, coherence and adequate answer jointly succeed."
+    },
+    "tool_decision": {
+      "label": "Single-turn decision",
+      "source_field": "accuracy",
+      "targets": [
+        "call",
+        "clarify",
+        "abstain"
+      ]
+    },
+    "tool_followup": {
+      "label": "Single-turn follow-up",
+      "source_field": "followup_accuracy",
+      "targets": [
+        "clarify",
+        "abstain"
+      ],
+      "meaning": "The initial decision and follow-up action both succeed for the same item."
+    },
+    "tool_multi": {
+      "label": "Multi-turn BFCL",
+      "source_field": "bfcl_accuracy",
+      "targets": [
+        "call",
+        "clarify",
+        "abstain"
+      ],
+      "meaning": "BFCL execution and irrelevance checks; the field matching the published main table."
+    },
+    "tool_multi_joint": {
+      "label": "Multi-turn joint success",
+      "source_field": "accuracy",
+      "targets": [
+        "call",
+        "clarify",
+        "abstain"
+      ],
+      "meaning": "BFCL checks combined with semantic decision checks; a distinct metric from tool_multi."
+    }
+  },
+  "model_mapping": {
+    "qwen3-8b": "qwen3-8b",
+    "llama-3.1-8b-instruct": "llama-3.1-8b",
+    "gemma-2-9b-it": "gemma-2-9b"
+  },
+  "method_labels": {
+    "unsteered": "No Steering",
+    "prompted": "Prompted",
+    "caa": "CAA",
+    "pca": "PCA",
+    "lat": "LAT",
+    "linear-probe": "Linear Probe",
+    "iti": "ITI",
+    "sae": "SAE"
+  },
+  "null": "Not applicable or not evaluated; do not render as zero.",
+  "sae_scope": "Gemma-2-9B only.",
+  "display_precision": 2
+}

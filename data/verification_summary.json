@@ -1,0 +1,20 @@
+{
+  "expected_configurations": 2376,
+  "included_configurations": 2376,
+  "missing_configurations": 0,
+  "model_method_rows": 22,
+  "paper_metric_cells": 88,
+  "per_target_rows": 352,
+  "if_per_target_rows": 110,
+  "per_example_score_rows_checked": 475200,
+  "candidate_validation_failures": 0,
+  "paper_comparison": {
+    "matches_paper_rounding": 88
+  },
+  "by_domain": {
+    "instruction_following": 1080,
+    "tool_use": 648,
+    "tool_use_multi_turn": 648
+  },
+  "validation": "Counts, unique item IDs, judgment availability and primary metrics recomputed from scores.jsonl. No new model evaluations were run."
+}

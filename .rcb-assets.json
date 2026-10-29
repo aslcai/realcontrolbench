@@ -7,7 +7,12 @@
   "assets/fonts/ManropeVariable.ttf",
   "assets/mark.svg",
   "catalog.js",
+  "data/leaderboard.json",
+  "data/metadata.json",
+  "data/source_catalog.json",
+  "data/verification_summary.json",
   "index.html",
   "leaderboard.html",
+  "results.js",
   "styles.css"
 ]
