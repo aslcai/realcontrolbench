@@ -8,11 +8,11 @@
   <title>RealControlBench</title>
   <link rel="icon" href="assets/mark.svg?v=79db890c1c" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/ManropeVariable.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=afa5a57dd2">
+  <link rel="stylesheet" href="styles.css?v=e8e4020e67">
   <script defer src="results.js?v=824cde9b16"></script>
   <script defer src="catalog.js?v=3170413458"></script>
   <script defer src="app.js?v=41aad651eb"></script>
-  <script defer src="submission.js?v=9eccaa03ee"></script>
+  <script defer src="submission.js?v=3d50cb3607"></script>
 </head>
 <body data-page="leaderboard">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -37,49 +37,8 @@
     <p class="sr-only" id="sort-status" role="status" aria-live="polite"></p>
     <div class="board-notes"><details><summary>Metrics and evaluation details <span aria-hidden="true">+</span></summary><div id="metric-notes"></div><p>Compare methods within the same base model, task, and evaluation protocol. A missing result is not a zero.</p></details></div>
     <section class="submission-panel" id="submit" aria-labelledby="submission-heading">
-      <div class="submission-heading"><h2 id="submission-heading">Submit a method</h2><p>Share your method. We run the evaluation.</p></div>
-      <ol class="submission-progress" aria-label="Submission steps">
-        <li><button type="button" data-submission-step="0" aria-current="step"><span class="step-number" aria-hidden="true">1</span><span>Method Information</span></button></li>
-        <li><button type="button" data-submission-step="1" disabled><span class="step-number" aria-hidden="true">2</span><span>Method Implementation</span></button></li>
-        <li><button type="button" data-submission-step="2" disabled><span class="step-number" aria-hidden="true">3</span><span>Review &amp; Submit</span></button></li>
-      </ol>
-      <form id="submission-form" novalidate>
-        <fieldset class="submission-stage" data-stage="0" aria-labelledby="information-heading">
-          <legend class="sr-only">Method Information</legend>
-          <h3 id="information-heading" tabindex="-1">Method Information</h3>
-          <div class="submission-fields">
-            <label class="field field-wide" for="method-name">Method name<input id="method-name" name="method_name" required maxlength="120" autocomplete="off"></label>
-            <label class="field field-wide" for="method-description">Short description<textarea id="method-description" name="description" required maxlength="2000" rows="3"></textarea></label>
-            <label class="field field-wide" for="method-authors">Authors<input id="method-authors" name="authors" required maxlength="800" autocomplete="off"></label>
-            <label class="field" for="method-institution">Institution (optional)<input id="method-institution" name="institution" maxlength="300" autocomplete="organization"></label>
-            <label class="field" for="method-paper">Paper URL (optional)<input id="method-paper" name="paper_url" type="url" maxlength="2048" placeholder="https://" data-http-url></label>
-          </div>
-        </fieldset>
-        <fieldset class="submission-stage" data-stage="1" aria-labelledby="implementation-heading" hidden disabled>
-          <legend class="sr-only">Method Implementation</legend>
-          <h3 id="implementation-heading" tabindex="-1">Method Implementation</h3>
-          <div class="submission-fields">
-            <label class="field field-wide" for="implementation-type">Code source<select id="implementation-type" name="implementation_type"><option value="repository">GitHub repository</option><option value="archive">Code archive link</option></select></label>
-            <label class="field field-wide" for="implementation-url"><span id="implementation-url-label">GitHub repository URL</span><input id="implementation-url" name="implementation_url" type="url" required maxlength="2048" placeholder="https://github.com/owner/repository" data-http-url></label>
-            <label class="field field-wide" for="implementation-version">Fixed code version<input id="implementation-version" name="version" required maxlength="160" placeholder="Commit SHA, release tag, or archive checksum" autocomplete="off"></label>
-            <label class="field field-wide" for="implementation-config">Dependencies and configuration<textarea id="implementation-config" name="configuration" required maxlength="12000" rows="5" placeholder="Environment, dependencies, model and task settings, and run command"></textarea></label>
-            <label class="field field-wide" for="implementation-artifacts">Additional artifacts (optional)<textarea id="implementation-artifacts" name="artifacts" maxlength="8000" rows="3" placeholder="Links to steering vectors, checkpoints, or other required files"></textarea></label>
-          </div>
-        </fieldset>
-        <fieldset class="submission-stage" data-stage="2" aria-labelledby="review-heading" hidden disabled>
-          <legend class="sr-only">Review &amp; Submit</legend>
-          <h3 id="review-heading" tabindex="-1">Review &amp; Submit</h3>
-          <div id="submission-review" class="submission-review"></div>
-          <p class="submission-handoff" id="submission-handoff">Finish your public pull request on GitHub. Your information is kept on this page until you continue.</p>
-          <details class="submission-file"><summary>Submission file</summary><div class="submission-file-actions"><button type="button" class="button" id="copy-submission">Copy JSON</button><a class="button" id="download-submission">Download JSON</a></div><pre id="submission-json" tabindex="0"></pre><p id="submission-copy-status" role="status" aria-live="polite"></p></details>
-        </fieldset>
-        <div class="submission-controls">
-          <button type="button" class="button" id="submission-back" hidden>Back</button>
-          <button type="submit" class="button primary" id="submission-next">Continue</button>
-          <a class="button primary" id="submission-github" target="_blank" rel="noopener noreferrer" hidden>Submit on GitHub ↗</a>
-        </div>
-        <p id="submission-status" class="sr-only" role="status" aria-live="polite"></p>
-      </form>
+      <div class="submission-heading"><h2 id="submission-heading">Submit a method</h2><p>Submit your method details, versioned code, and run instructions through a GitHub pull request. We run the evaluation.</p></div>
+      <a class="button primary" id="submission-github" href="https://github.com/MingyuJ666/ControlBench/new/main" target="_blank" rel="noopener noreferrer">Submit via GitHub ↗</a>
     </section>
   </main>
   <footer id="site-footer" class="site-footer container"></footer>
